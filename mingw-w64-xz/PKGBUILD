@@ -1,0 +1,56 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname="xz"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Library and command line tools for XZ and LZMA compressed files (mingw-w64)"
+pkgver=5.8.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://tukaani.org/xz"
+msys2_references=(
+  "archlinux: xz"
+  "cpe: cpe:/a:tukaani:xz"
+)
+msys2_repository_url="https://github.com/tukaani-project/xz/"
+license=("spdx:0BSD AND LGPL-2.1-or-later AND GPL-2.0-or-later")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=("https://github.com/tukaani-project/xz/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"{,.sig})
+sha256sums=(
+  "890966ec3f5d5cc151077879e157c0593500a522f413ac50ba26d22a9a145214"
+  "SKIP"
+)
+validpgpkeys=("3690C240CE51B4670D30AD1C38EE757D69184620") # Lasse Collin <lasse.collin@tukaani.org>
+
+build() {
+  local _common_config=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -DXZ_DOC=OFF
+    -DXZ_NLS=OFF
+    -S "${srcdir}/${_realname}-${pkgver}"
+  )
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=OFF \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}-static"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-static"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=ON \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}-static"
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+}

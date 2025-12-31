@@ -1,0 +1,71 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <Alexpux@gmail.com>
+
+_realname="openssl"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (mingw-w64)"
+pkgver=3.6.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://openssl-library.org"
+msys2_references=(
+  "archlinux: openssl"
+  "cpe: cpe:/a:openssl:openssl"
+)
+msys2_repository_url="https://github.com/openssl/openssl"
+license=("spdx:Apache-2.0")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc")
+source=(
+  "https://github.com/openssl/openssl/releases/download/${_realname}-${pkgver}/${_realname}-${pkgver}.tar.gz"{,.asc}
+  "002-relocation.patch"
+  "003-no-set_printf_count_output.patch"
+  "pathtools.c"
+  "pathtools.h"
+)
+sha256sums=(
+  "b6a5f44b7eb69e3fa35dbf15524405b44837a481d43d81daddde3ff21fcbb8e9"
+  "SKIP"
+  "fdc83cb231ed89e9fea70bc82e487427be8eb07417c1bbc3f0aa8561e79de9f3"
+  "90ff62d4f25f641d4eb06aa5400c2bc1ed92c3ad3b4040507b6a4323930c621c"
+  "ebf471173f5ee9c4416c10a78760cea8afaf1a4a6e653977321e8547ce7bf3c0"
+  "1585ef1b61cf53a2ca27049c11d49e0834683dfda798f03547761375df482a90"
+)
+validpgpkeys=("BA5473A2B0587B07FB27CF2D216094DFD0CB81EF") # openssl@openssl.org
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/002-relocation.patch"
+  patch -Np1 -i "${srcdir}/003-no-set_printf_count_output.patch"
+  cp -fH "${srcdir}/pathtools.c" "${srcdir}/${_realname}-${pkgver}/crypto/"
+  cp -fH "${srcdir}/pathtools.h" "${srcdir}/${_realname}-${pkgver}/"
+}
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+  /usr/bin/perl "${srcdir}/${_realname}-${pkgver}/Configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --libdir=lib \
+    --openssldir=etc/ssl \
+    --pgo \
+    mingw64 \
+    no-docs \
+    no-filenames \
+    no-legacy \
+    no-tests \
+    no-tls-deprecated-ec \
+    -DOPENSSLBIN=\"\\\"${MINGW_PREFIX}/bin\\\"\"
+  MSYS2_ARG_CONV_EXCL="-DENGINESDIR=;-DMODULESDIR=;-DOPENSSLDIR=;-DINSTALLTOP=;-DOPENSSLBIN=" \
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install
+  for pcfile in "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/"*.pc; do
+    sed -s "s|${MINGW_PREFIX}|\${prefix}|g" -i "${pcfile}"
+    sed -i "1s|^|prefix=${MINGW_PREFIX}\\n|" "${pcfile}"
+  done
+}

@@ -1,0 +1,82 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Ray Donnelly <mingw.android@gmail.com>
+
+_realname="cmake"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="A cross-platform open-source make system (mingw-w64)"
+pkgver=4.2.1
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.cmake.org/"
+msys2_references=(
+  "archlinux: cmake"
+  "cpe: cpe:2.3:a:cmake_project:cmake"
+)
+msys2_repository_url="https://gitlab.kitware.com/cmake/cmake"
+license=("spdx:MIT")
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-cc-libs"
+  "${MINGW_PACKAGE_PREFIX}-curl"
+  "${MINGW_PACKAGE_PREFIX}-expat"
+  "${MINGW_PACKAGE_PREFIX}-jsoncpp"
+  "${MINGW_PACKAGE_PREFIX}-libarchive"
+  "${MINGW_PACKAGE_PREFIX}-libuv"
+  "${MINGW_PACKAGE_PREFIX}-ninja"
+  "${MINGW_PACKAGE_PREFIX}-pkgconf"
+  "${MINGW_PACKAGE_PREFIX}-rhash"
+  "${MINGW_PACKAGE_PREFIX}-zlib"
+)
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://github.com/Kitware/CMake/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.gz"
+  "0001-Disable-response-files-for-MSYS-Generator.patch"
+  "0002-Do-not-install-Qt-bundle-in-cmake-gui.patch"
+  "0003-fix-find-python-on-mingw-aarch64.patch"
+  "0005-Default-to-ninja-generator.patch"
+)
+sha256sums=(
+  "414aacfac54ba0e78e64a018720b64ed6bfca14b587047b8b3489f407a14a070"
+  "25793edcbac05bb6d17fa9947b52ace4a6b5ccccf7758e22ae9ae022ed089061"
+  "f6cf6a6f2729db2b9427679acd09520af2cd79fc26900b19a49cead05a55cd1a"
+  "557b5cbc05d4d50b3a67a7892391fcaa5cd95c492cdb4338d86305d1f4a3b88a"
+  "426818278090704d2a12f62ef3dfd94c47b11fa2784bb842989b7f6a09ee7aa2"
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/0001-Disable-response-files-for-MSYS-Generator.patch"
+  patch -Np1 -i "${srcdir}/0003-fix-find-python-on-mingw-aarch64.patch"
+  patch -Np1 -i "${srcdir}/0005-Default-to-ninja-generator.patch"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_DATA_DIR=share/cmake \
+    -DCMAKE_DOC_DIR=share/doc/cmake \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_USE_SYSTEM_LIBRARIES=ON \
+    -DBUILD_TESTING=OFF \
+    -DCMake_BUILD_LTO=ON \
+    -DCMake_ENABLE_DEBUGGER=OFF \
+    -DCMake_INSTALL_COMPONENTS=ON \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}" --component cmake
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}" --component Unspecified
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/cmake/Help"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/doc"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/emacs"
+}

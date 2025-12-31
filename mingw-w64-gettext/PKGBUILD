@@ -1,0 +1,139 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname="gettext"
+pkgbase="mingw-w64-${_realname}"
+pkgname=(
+  "${MINGW_PACKAGE_PREFIX}-${_realname}-runtime"
+  "${MINGW_PACKAGE_PREFIX}-${_realname}-libtextstyle"
+  "${MINGW_PACKAGE_PREFIX}-${_realname}-tools"
+)
+pkgver=0.26
+pkgrel=2
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.gnu.org/software/gettext/"
+msys2_references=("cpe: cpe:/a:gnu:gettext")
+msys2_repository_url="https://git.savannah.gnu.org/gitweb/?p=gettext.git"
+license=("spdx:GPL-3.0-or-later AND LGPL-2.1-or-later")
+makedepends=(
+  "autotools"
+  "groff"
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-libtool"
+)
+source=(
+  "https://ftp.gnu.org/pub/gnu/gettext/${_realname}-${pkgver}.tar.xz"{,.sig}
+  "0005-Fix-compilation-of-pthread_sigmask.c.patch"
+  "122-Use-LF-as-newline-in-envsubst.patch"
+  "0021-replace-fsync.patch"
+  "0022-libasprintf.patch"
+  "0024-disable-gnu-format.patch"
+  "0030-fix-build-with-mingw-w64-clang.patch"
+  "0101-fix-build-with-clang-21.patch"
+)
+sha256sums=(
+  "d1fb86e260cfe7da6031f94d2e44c0da55903dbae0a2fa0fae78c91ae1b56f00"
+  "SKIP"
+  "cbc2f533012d646521afa20f8b256917fce040741ff42cf53fb6dd7123a6670a"
+  "ec39103d851262c02c27b7038f3c538e03afaefc6aa050311d62519d192ff38c"
+  "380dbddee2f9e2feee4c1435e8a942b5d11d0125e60c3350ebb10c19b19011aa"
+  "c354f6a7021069c99b90f1c6d6f6a4ccf40a01e9f6742b866df2b5a7286cb868"
+  "ce7ccf6dd3a492cab322253cd67310899b546eccc25821c25cbc047a1a984633"
+  "9b1b4f0c65b3bc1a3103c921a02c203cecf533d145f0bd90023406e760f81749"
+  "0055847af8154f3b33858f724fdf0b2df92645c86f220ea79dac847c09f4d358"
+)
+validpgpkeys=(
+  "462225C3B46F34879FC8496CD605848ED7E69871" # Daiki Ueno
+  "9001B85AF9E1B83DF1BDA942F5BE8B267C6A406D" # Bruno Haible
+  "E0FFBD975397F77A32AB76ECB6301D9E1BBEAC08" # Bruno Haible (FSF) <bruno@clisp.org>
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/0005-Fix-compilation-of-pthread_sigmask.c.patch"
+  patch -Np1 -i "${srcdir}/122-Use-LF-as-newline-in-envsubst.patch"
+  patch -Np1 -i "${srcdir}/0021-replace-fsync.patch"
+  patch -Np1 -i "${srcdir}/0022-libasprintf.patch"
+  patch -Np1 -i "${srcdir}/0024-disable-gnu-format.patch"
+  patch -Np1 -i "${srcdir}/0030-fix-build-with-mingw-w64-clang.patch"
+  patch -Np1 -i "${srcdir}/0101-fix-build-with-clang-21.patch"
+  "${MINGW_PREFIX}/bin/libtoolize" --automake --copy --force
+  WANT_AUTOMAKE=latest ./autogen.sh --skip-gnulib
+}
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  # Disable LTO as it breaks executables
+  CFLAGS="${CFLAGS//-flto=thin/} -D__USE_MINGW_ANSI_STDIO" \
+  CXXFLAGS="${CXXFLAGS//-flto=thin/} -D__USE_MINGW_ANSI_STDIO" \
+  LDFLAGS="${LDFLAGS//-flto=thin/}" \
+  MSYS2_ARG_CONV_EXCL="-DLOCALEDIR=;-DLIBDIR=;-DLOCALE_ALIAS_PATH=" \
+  "${srcdir}/${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --libexecdir="${MINGW_PREFIX}/lib" \
+    --disable-csharp \
+    --disable-d \
+    --disable-go \
+    --disable-java \
+    --disable-modula2 \
+    --disable-openmp \
+    --enable-relocatable \
+    --enable-shared \
+    --enable-static \
+    --enable-threads=windows \
+    --without-emacs \
+    --without-git \
+    lt_cv_deplibs_check_method='pass_all' \
+    gl_cv_func_mkdir_trailing_dot_works=yes
+  sed -s "s|${MINGW_PREFIX}|$(cygpath -m "${MINGW_PREFIX}")|g" -i gettext-tools/config.h
+  make -j$(nproc)
+}
+
+package_gettext-runtime() {
+  pkgdesc="GNU internationalization runtime library (mingw-w64)"
+  depends=(
+    "${MINGW_PACKAGE_PREFIX}-cc-libs"
+    "${MINGW_PACKAGE_PREFIX}-libiconv"
+  )
+
+  cd "${srcdir}/build-${MSYSTEM}/gettext-runtime"
+  make DESTDIR="${pkgdir}" install
+  rm -d "${pkgdir}${MINGW_PREFIX}/lib/gettext"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/"{doc,gettext,info,man}
+}
+
+package_gettext-libtextstyle() {
+  pkgdesc="GNU LIBTEXTSTYLE - Text styling library (mingw-w64)"
+  depends=("${MINGW_PACKAGE_PREFIX}-libiconv")
+
+  cd "${srcdir}/build-${MSYSTEM}/libtextstyle"
+  make DESTDIR="${pkgdir}" install
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}
+
+package_gettext-tools() {
+  pkgdesc="GNU internationalization tools (mingw-w64)"
+  depends=(
+    "${MINGW_PACKAGE_PREFIX}-gettext-libtextstyle"
+    "${MINGW_PACKAGE_PREFIX}-gettext-runtime"
+    "${MINGW_PACKAGE_PREFIX}-libiconv"
+    "${MINGW_PACKAGE_PREFIX}-libunistring"
+  )
+
+  cd "${srcdir}/build-${MSYSTEM}/gettext-tools"
+  make DESTDIR="${pkgdir}" install
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/"{doc,info,man}
+}
+
+# template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
+# vim: set ft=bash :
+
+# generate wrappers
+for _name in "${pkgname[@]}"; do
+  _short="package_${_name#${MINGW_PACKAGE_PREFIX}-}"
+  _func="$(declare -f "${_short}")"
+  eval "${_func/#${_short}/package_${_name}}"
+done
+# template end;

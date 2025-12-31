@@ -1,0 +1,50 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Ray Donnelly <mingw.android@gmail.com>
+
+_realname="rhash"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Great utility for computing hash sums (mingw-w64)"
+pkgver=1.4.6
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://sourceforge.net/projects/rhash/"
+msys2_references=("cpe: cpe:2.3:a:rhash_project:rhash")
+msys2_repository_url="https://github.com/rhash/RHash"
+license=("spdx:0BSD")
+depends=("${MINGW_PACKAGE_PREFIX}-openssl")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc")
+source=(
+  "https://github.com/rhash/RHash/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz"
+  "rhash-mingw-install.patch"
+)
+sha256sums=(
+  "9f6019cfeeae8ace7067ad22da4e4f857bb2cfa6c2deaa2258f55b2227ec937a"
+  "83cf845d426a5bee7ea21c9d9473328668a7e3d5bdd6e2583f208522f2ee231c"
+)
+validpgpkeys=("2875F6B1C2D27A4F0C8AF60B2A714497E37363AE")
+
+prepare() {
+  cd "${srcdir}/RHash-${pkgver}"
+  patch -Np1 -i "${srcdir}/rhash-all-mingw.patch"
+}
+
+build() {
+  [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
+  cp -r "${srcdir}/RHash-${pkgver}" "${srcdir}/build-${MSYSTEM}"
+  cd "${srcdir}/build-${MSYSTEM}"
+  ./configure \
+    --prefix="${MINGW_PREFIX}" \
+    --disable-gettext \
+    --enable-lib-shared \
+    --enable-lib-static \
+    --enable-openssl
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

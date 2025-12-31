@@ -1,0 +1,52 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream contributor: Jevgeny Krasovsky <jkrasovsky@gmail.com>
+
+_realname="qrencode"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="C library for encoding data in a QR Code symbol (mingw-w64)"
+pkgver=4.1.1
+pkgrel=4
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://fukuchi.org/works/qrencode/index.en.html"
+msys2_repository_url="https://github.com/fukuchi/libqrencode"
+license=("spdx:LGPL-2.1-or-later")
+depends=("${MINGW_PACKAGE_PREFIX}-winpthreads")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=("https://github.com/fukuchi/libqrencode/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=("5385bc1b8c2f20f3b91d258bf8ccc8cf62023935df2d2676b5b67049f31a049c")
+
+build() {
+  local _common_config=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DWITH_TOOLS=OFF
+    -DWITHOUT_PNG=ON
+    -S "${srcdir}/libqrencode-${pkgver}"
+  )
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=OFF \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}-static"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-static"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=ON \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}-static"
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  mkdir "${pkgdir}${MINGW_PREFIX}/bin"
+  mv "${pkgdir}${MINGW_PREFIX}/lib/libqrencode.dll" "${pkgdir}${MINGW_PREFIX}/bin/"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

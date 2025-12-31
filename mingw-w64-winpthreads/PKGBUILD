@@ -1,0 +1,63 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Martell Malone <martellmalone@gmail.com>
+# Upstream contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname="winpthreads"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="MinGW-w64 winpthreads library (mingw-w64)"
+pkgver=13.0.0.r388.gbb8673e5f
+pkgrel=1
+_commit="bb8673e5f137300b018d1dcdeab1c28c1d292e97"
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.mingw-w64.org/"
+msys2_repository_url="https://sourceforge.net/p/mingw-w64/mingw-w64/ci/master/tree/mingw-w64-libraries/winpthreads"
+license=("spdx:MIT AND BSD-3-Clause-Clear")
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+depends=("${MINGW_PACKAGE_PREFIX}-crt")
+makedepends=(
+  "autotools"
+  "git"
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-headers"
+  "${MINGW_PACKAGE_PREFIX}-libtool"
+)
+options=("!emptydirs")
+source=(
+  "mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64#commit=${_commit}"
+  "0001-Define-__-de-register_frame_info-in-fake-libgcc_s.patch"
+)
+sha256sums=(
+  "8668e7f398b98b493e131fee57500466ab334c3fff0e6cf754e49aee5f223b44"
+  "2e779bcc60a1422b23e0cfdb5c0f6851f2382592bb4675d08a6bdef78d5e5c10"
+)
+
+pkgver() {
+  cd "${srcdir}/mingw-w64"
+  git describe --long "${_commit}" | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+}
+
+prepare() {
+  cd "${srcdir}/mingw-w64"
+  [[ -f "mingw-w64-libraries/winpthreads/src/libgcc/dll_frame_info.c" ]] && \
+  rm -f "mingw-w64-libraries/winpthreads/src/libgcc/dll_frame_info.c"
+  git apply "${srcdir}/0001-Define-__-de-register_frame_info-in-fake-libgcc_s.patch"
+  cd "${srcdir}/mingw-w64/mingw-w64-libraries/winpthreads"
+  autoreconf -vfi
+}
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  "${srcdir}/mingw-w64/mingw-w64-libraries/winpthreads/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --enable-shared \
+    --enable-static
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install
+}

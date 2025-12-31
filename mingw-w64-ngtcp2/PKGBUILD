@@ -1,0 +1,57 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Christoph Reiter <reiter.christoph@gmail.com>
+
+_realname="ngtcp2"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="An effort to implement IETF QUIC protocol (mingw-w64)"
+pkgver=1.19.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://nghttp2.org/ngtcp2/"
+msys2_repository_url="https://github.com/ngtcp2/ngtcp2"
+license=("spdx:MIT")
+depends=("${MINGW_PACKAGE_PREFIX}-openssl")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://github.com/ngtcp2/ngtcp2/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"{,.asc}
+  "001-fix-pc-prefix.patch"
+  "002-ngtcp2-pkgconfig-add-cflags-private.patch"
+)
+sha256sums=(
+  "f11f7da5065f2298f8b5f079a11f1a6f72389271b8dedd893c8eb26aba94bce9"
+  "SKIP"
+  "cdbb6fad1afc1eac3f3bca72cd83e49684439c02b0b74fd8841b9d1523ab86de"
+  "6f2e16f047e09b7dece4e3f5a04638756d6aab03856d7838467c6c5ec22b42cd"
+)
+validpgpkeys=(
+  "F4F3B91474D1EB29889BD0EF7E8403D5D673C366" # Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+  "516B622918D15C478AB1EA3A5339A2BE82E07DEC" # Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/001-fix-pc-prefix.patch"
+  patch -Np1 -i "${srcdir}/002-ngtcp2-pkgconfig-add-cflags-private.patch"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DBUILD_TESTING=OFF \
+    -DENABLE_LIB_ONLY=ON \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

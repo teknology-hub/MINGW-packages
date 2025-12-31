@@ -1,0 +1,59 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname="headers"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="MinGW-w64 headers for Windows (mingw-w64)"
+pkgver=13.0.0.r388.gbb8673e5f
+pkgrel=1
+_commit="bb8673e5f137300b018d1dcdeab1c28c1d292e97"
+arch=("any")
+mingw_arch=("tek-x86_64")
+url="https://www.mingw-w64.org/"
+msys2_repository_url="https://sourceforge.net/p/mingw-w64/mingw-w64/ci/master/tree/mingw-w64-headers/"
+license=("spdx:ZPL-2.1 AND LGPL-2.1-or-later")
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+makedepends=("git")
+provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+options=(
+  "!emptydirs"
+  "!strip"
+)
+source=(
+  "mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64#commit=${_commit}"
+  "0001-remove-ireference-boolean.patch"
+)
+sha256sums=(
+  "8668e7f398b98b493e131fee57500466ab334c3fff0e6cf754e49aee5f223b44"
+  "cad48616325b5e70afa4e02424021fc8d54e17dcbf86eae3df990d3500080236"
+)
+
+pkgver() {
+  cd "${srcdir}/mingw-w64"
+  git describe --long "${_commit}" | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+}
+
+prepare() {
+  cd "${srcdir}/mingw-w64"
+  git apply "${srcdir}/0001-remove-ireference-boolean.patch"
+}
+
+build() {
+  mkdir "${srcdir}/headers-${MSYSTEM}" && cd "${srcdir}/headers-${MSYSTEM}"
+  "${srcdir}/mingw-w64/mingw-w64-headers/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --enable-idl \
+    --enable-sdk=no \
+    --with-default-msvcrt=ucrt \
+    --with-default-win32-winnt=0xA00 \
+    --without-widl
+}
+
+package() {
+  cd "${srcdir}/headers-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install
+  rm "${pkgdir}${MINGW_PREFIX}/include/pthread_signal.h"
+  rm "${pkgdir}${MINGW_PREFIX}/include/pthread_time.h"
+  rm "${pkgdir}${MINGW_PREFIX}/include/pthread_unistd.h"
+}

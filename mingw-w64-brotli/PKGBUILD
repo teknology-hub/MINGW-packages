@@ -1,0 +1,51 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: J. Peter Mugaas <jpmugaas@suddenlink.net>
+# Upstream contributor: Dirk Stolle
+
+_realname="brotli"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Brotli compression library (mingw-w64)"
+pkgver=1.2.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://github.com/google/brotli"
+msys2_references=(
+  "anitya: 15235"
+  "cpe: cpe:/a:google:brotli"
+  "gentoo: app-arch/brotli"
+)
+license=("spdx:MIT")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=("https://github.com/google/brotli/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=("816c96e8e8f193b40151dad7e8ff37b1221d019dbcb9c35cd3fadbfe6477dfec")
+
+build() {
+  local _common_config=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -S "${srcdir}/${_realname}-${pkgver}"
+  )
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=OFF \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}-static"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-static"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=ON \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}-static"
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

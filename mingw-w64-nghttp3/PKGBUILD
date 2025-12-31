@@ -1,0 +1,53 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Christoph Reiter <reiter.christoph@gmail.com>
+
+_realname="nghttp3"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="HTTP/3 library written in C (mingw-w64)"
+pkgver=1.14.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://nghttp2.org/nghttp3/"
+msys2_repository_url="https://github.com/ngtcp2/nghttp3"
+license=("spdx:MIT")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://github.com/ngtcp2/nghttp3/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"{,.asc}
+  "001-fix-pc-prefix.patch"
+  "002-nghttp3-pkgconfig-add-cflags-private.patch"
+)
+sha256sums=(
+  "b3083dae2ff30cf00d24d5fedd432479532c7b17d993d384103527b36c1ec82d"
+  "SKIP"
+  "08559edf597300d34b258c5dab6d16237c6493976e7b4d45a818e0619d21665d"
+  "68c831018eb79bc3b43a8fb6a7d013a617dbe2ba7d7971b0993b3cf27107e614"
+)
+validpgpkeys=("F4F3B91474D1EB29889BD0EF7E8403D5D673C366") # Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/001-fix-pc-prefix.patch"
+  patch -Np1 -i "${srcdir}/002-nghttp3-pkgconfig-add-cflags-private.patch"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DBUILD_TESTING=OFF \
+    -DENABLE_LIB_ONLY=ON \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

@@ -1,0 +1,106 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Christoph Reiter <reiter.christoph@gmail.com>
+
+_realname="zlib-ng"
+pkgbase="mingw-w64-${_realname}"
+pkgname=(
+  "${MINGW_PACKAGE_PREFIX}-${_realname}"
+  "${MINGW_PACKAGE_PREFIX}-${_realname}-compat"
+)
+pkgdesc="zlib replacement with optimizations for next generation systems (mingw-w64)"
+pkgver=2.3.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://github.com/zlib-ng/zlib-ng"
+msys2_references=(
+  "anitya: 115592"
+  "archlinux: zlib-ng"
+  "gentoo: sys-libs/zlib-ng"
+)
+license=("spdx:Zlib")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://github.com/zlib-ng/zlib-ng/archive/refs/tags/${pkgver}/${_realname}-${pkgver}.tar.gz"
+  "0001-match-existing-zlib-naming.patch"
+  "0002-fix-compat-symbol-overlap.patch"
+)
+sha256sums=(
+  "6a0561b50b8f5f6434a6a9e667a67026f2b2064a1ffa959c6b2dae320161c2a8"
+  "552965cd9a6dcad46a12429dbda491bd4693e0209cb695f41412524c2fa12f20"
+  "2cc48d450c7d1e6af9984ac8c0fa4b1222f6bee6057733bd9faf8c756b1ad47e"
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/0001-match-existing-zlib-naming.patch"
+  # When both zlib-ng and zlib (zlib-ng-compat) are linked statically, some
+  # internal implementation functions may be taken from the other library even
+  # without raising multiple definition errors. As they're compiled with
+  # different structure layouts, it causes crashes on runtime. Resolves this by
+  # making those internal functions use PREFIX
+  patch -Np1 -i "${srcdir}/0002-fix-compat-symbol-overlap.patch"
+}
+
+build() {
+  local _common_config=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -DBUILD_TESTING=OFF
+    -DWITH_GTEST=OFF
+    -S "${srcdir}/${_realname}-${pkgver}"
+  )
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=OFF \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}-static"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-static"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=ON \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DZLIB_COMPAT=ON \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}-compat-static"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-compat-static"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=ON \
+    -DZLIB_COMPAT=ON \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}-compat"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-compat"
+}
+
+package_zlib-ng() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}-static"
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+}
+
+package_zlib-ng-compat() {
+  pkgdesc+=" (zlib compat)"
+  provides=("${MINGW_PACKAGE_PREFIX}-zlib")
+  
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}-compat-static"
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}-compat"
+}
+
+# template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
+# vim: set ft=bash :
+
+# generate wrappers
+for _name in "${pkgname[@]}"; do
+  _short="package_${_name#${MINGW_PACKAGE_PREFIX}-}"
+  _func="$(declare -f "${_short}")"
+  eval "${_func/#${_short}/package_${_name}}"
+done
+# template end;

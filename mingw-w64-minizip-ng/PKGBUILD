@@ -1,0 +1,60 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream contributor: Mehdi Chinoune <mehdi.chinoune@hotmail.com>
+
+_realname="minizip-ng"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Fork of the popular zip manipulation library found in the zlib distribution. (mingw-w64)"
+pkgver=4.0.10
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://github.com/zlib-ng/minizip-ng/"
+msys2_references=(
+  "archlinux: minizip-ng"
+  "cpe: cpe:2.3:a:zlib-ng:minizip-ng"
+)
+license=("spdx:Zlib")
+depends=("${MINGW_PACKAGE_PREFIX}-zlib-ng")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=("https://github.com/zlib-ng/minizip-ng/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=("c362e35ee973fa7be58cc5e38a4a6c23cc8f7e652555daf4f115a9eb2d3a6be7")
+
+build() {
+  local _common_config=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -DMZ_BZIP2=OFF \
+    -DMZ_COMPAT=OFF \
+    -DMZ_FETCH_LIBS=OFF \
+    -DMZ_LZMA=OFF \
+    -DMZ_PKCRYPT=OFF \
+    -DMZ_ZSTD=OFF \
+    -DMZ_WZAES=OFF \
+    -S "${srcdir}/${_realname}-${pkgver}"
+  )
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=OFF \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}-static"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-static"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DBUILD_SHARED_LIBS=ON \
+    "${_common_config[@]}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}-static"
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  local PREFIX_WIN="$(cygpath -wm "${MINGW_PREFIX}")"
+  for _f in "${pkgdir}${MINGW_PREFIX}/lib/cmake/${_realname}/"*.cmake; do
+    sed -e "s|${PREFIX_WIN}|\$\{_IMPORT_PREFIX\}|g" -i "${_f}"
+  done
+}

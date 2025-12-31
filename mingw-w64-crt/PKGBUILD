@@ -1,0 +1,51 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname="crt"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="MinGW-w64 CRT for Windows (mingw-w64)"
+pkgver=13.0.0.r388.gbb8673e5f
+pkgrel=1
+_commit="bb8673e5f137300b018d1dcdeab1c28c1d292e97"
+arch=("x86_64")
+mingw_arch=('tek-x86_64')
+url="https://www.mingw-w64.org/"
+msys2_repository_url="https://sourceforge.net/p/mingw-w64/mingw-w64/ci/master/tree/mingw-w64-crt/"
+license=("spdx:ZPL-2.1")
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+depends=("${MINGW_PACKAGE_PREFIX}-headers")
+makedepends=(
+  "git"
+  "${MINGW_PACKAGE_PREFIX}-binutils"
+  "${MINGW_PACKAGE_PREFIX}-cc"
+)
+options=(
+  "!strip"
+  "!buildflags"
+  "!emptydirs"
+)
+source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64#commit=${_commit}")
+sha256sums=("8668e7f398b98b493e131fee57500466ab334c3fff0e6cf754e49aee5f223b44")
+
+pkgver() {
+  cd "${srcdir}/mingw-w64"
+  git describe --long "${_commit}" | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+}
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  "${srcdir}/mingw-w64/mingw-w64-crt/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --disable-dependency-tracking \
+    --disable-lib32 --enable-lib64 \
+    --with-default-msvcrt=ucrt
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install-strip
+  "${MINGW_PREFIX}/bin/ar" rcs "${pkgdir}${MINGW_PREFIX}/lib/libssp.a"
+  "${MINGW_PREFIX}/bin/ar" rcs "${pkgdir}${MINGW_PREFIX}/lib/libssp_nonshared.a"
+}

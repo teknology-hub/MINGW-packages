@@ -1,0 +1,31 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname="lz4"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Very fast lossless compression algorithm (mingw-w64)"
+pkgver=1.10.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://lz4.github.io/lz4/"
+msys2_references=("cpe: cpe:/a:lz4_project:lz4")
+msys2_repository_url="https://github.com/lz4/lz4"
+license=("spdx:BSD-2-Clause AND GPL-2.0-or-later")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc")
+source=("https://github.com/lz4/lz4/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=("537512904744b35e232912055ccf8ec66d768639ff3abe5788d90d792ec5f48b")
+
+build() {
+  [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
+  cp -r "${srcdir}/${_realname}-${pkgver}" "${srcdir}/build-${MSYSTEM}"
+  cd "${srcdir}/build-${MSYSTEM}"
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" PREFIX="${MINGW_PREFIX}" install
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

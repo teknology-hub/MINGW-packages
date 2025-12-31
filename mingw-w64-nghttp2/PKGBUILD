@@ -1,0 +1,61 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: J. Peter Mugaas <jpmugaas@suddenlink.net>
+
+_realname="nghttp2"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Framing layer of HTTP/2 is implemented as a reusable C library (mingw-w64)"
+pkgver=1.68.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://nghttp2.org/"
+msys2_references=(
+  "archlinux: libnghttp2"
+  "cpe: cpe:/a:nghttp2:nghttp2"
+  "cygwin: nghttp2"
+  "gentoo: net-libs/nghttp2"
+)
+msys2_repository_url="https://github.com/nghttp2/nghttp2"
+license=("spdx:MIT")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://github.com/nghttp2/nghttp2/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"
+  "001-fix-pc-prefix.patch"
+  "002-nghttp2-pkgconfig-add-cflags-private.patch"
+)
+sha256sums=(
+  "5511d3128850e01b5b26ec92bf39df15381c767a63441438b25ad6235def902c"
+  "baf901e7d565eaea1133d30b13620b02681ce96ebe56d38e1dea4394299106b6"
+  "d82d0b5b32e26955c99ef70e129b33696fee01ad9a9a4e5d0fb98951fb5d0f22"
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/001-fix-pc-prefix.patch"
+  patch -Np1 -i "${srcdir}/002-nghttp2-pkgconfig-add-cflags-private.patch"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_STATIC_LIBS=ON \
+    -DENABLE_DOC=OFF \
+    -DENABLE_LIB_ONLY=ON \
+    -DWITH_JEMALLOC=OFF \
+    -DWITH_LIBXML2=OFF \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

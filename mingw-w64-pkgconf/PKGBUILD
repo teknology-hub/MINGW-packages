@@ -1,0 +1,53 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Ilya Rakhlin <i.rakhlin@gmail.com>
+
+_realname="pkgconf"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="pkg-config compatible utility which does not depend on glib"
+pkgver=2.5.1
+pkgrel=1
+epoch=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://github.com/pkgconf/pkgconf"
+msys2_references=(
+  "archlinux: pkgconf"
+  "cpe: cpe:/a:pkgconf:pkgconf"
+)
+license=("spdx:ISC")
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-meson"
+)
+provides=("${MINGW_PACKAGE_PREFIX}-pkg-config")
+source=("https://github.com/pkgconf/pkgconf/archive/pkgconf-${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=("79721badcad1987dead9c3609eb4877ab9b58821c06bdacb824f2c8897c11f2a")
+
+prepare() {
+  mv "${_realname}-${_realname}-${pkgver}" "${_realname}-${pkgver}"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+  "${MINGW_PREFIX}/bin/meson" setup \
+    --buildtype=debugoptimized \
+    --prefix="${MINGW_PREFIX}" \
+    -Db_lto=true \
+    -Db_lto_mode=thin \
+    -Db_ndebug=true \
+    -Dstrip=true \
+    -Dtests=disabled \
+    "${srcdir}/build-${MSYSTEM}" \
+    "${srcdir}/${_realname}-${pkgver}"
+  "${MINGW_PREFIX}/bin/meson" compile -C "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  "${MINGW_PREFIX}/bin/meson" install -C "${srcdir}/build-${MSYSTEM}" --destdir "${pkgdir}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/"{doc,man}
+  cp "${pkgdir}${MINGW_PREFIX}/bin/pkgconf" "${pkgdir}${MINGW_PREFIX}/bin/pkg-config"
+  cp "${pkgdir}${MINGW_PREFIX}/bin/pkgconf" "${pkgdir}${MINGW_PREFIX}/bin/${MINGW_CHOST}-pkgconf"
+  cp "${pkgdir}${MINGW_PREFIX}/bin/pkgconf" "${pkgdir}${MINGW_PREFIX}/bin/${MINGW_CHOST}-pkg-config"
+}

@@ -1,0 +1,106 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Ray Donnelly <mingw.android@gmail.com>
+
+_realname="tcl"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="The Tcl scripting language (mingw-w64)"
+pkgver=8.6.17
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://tcl-lang.org/"
+msys2_references=("cpe: cpe:/a:tcl:tcl")
+license=("custom")
+depends=("${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=(
+  "autotools"
+  "${MINGW_PACKAGE_PREFIX}-cc"
+)
+source=(
+  "https://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz"
+  "005-no-xc.mingw.patch"
+  "007-install.mingw.patch"
+  "010-win-non-x86.patch"
+  "011-win-arm64.patch"
+  "012-tcl-add-pkgconfig-file.patch"
+)
+sha256sums=(
+  "a3903371efcce8a405c5c245d029e9f6850258a60fa3761c4d58995610949b31"
+  "2b0f41f6704aa964dbfafa0a65dd5ce0ab97e82ff5cbbe2a95a2e8d644cc5550"
+  "0fcd6877b8057ac0e2870e26b32b6dad7e5368a7ecae2876aef3c2ffc2570fbb"
+  "bdaeb5695ffc860215df81276f347995a9f5bd8ce37f8f85ac1465cf71086ebd"
+  "51dc29f822ad7af721d1dd6d13700856c21da30c70c9c2aa688f69a950965113"
+  "2dcbda286c31d43b0134568a5e8a384f1a89fec2bccde51e4571ff77b1a3a1bf"
+)
+
+prepare() {
+  cd "${srcdir}/tcl${pkgver}"
+  patch -Np1 -i "${srcdir}/005-no-xc.mingw.patch"
+  patch -Np1 -i "${srcdir}/007-install.mingw.patch"
+  patch -Np1 -i "${srcdir}/010-win-non-x86.patch"
+  patch -Np1 -i "${srcdir}/011-win-arm64.patch"
+  patch -Np1 -i "${srcdir}/012-tcl-add-pkgconfig-file.patch"
+  cp unix/tcl.pc.in win/
+  find "${srcdir}/tcl${pkgver}" -type f \( -name "tcl.m4" -o -name "configure*" \) -print0 | xargs -0 sed -i 's/-static-libgcc//g'
+  cd "${srcdir}/tcl${pkgver}/win"
+  autoreconf -fi
+}
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  "${srcdir}/tcl${pkgver}/win/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --enable-64bit \
+    --enable-threads
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make INSTALL_ROOT="$pkgdir" install
+  cp "${pkgdir}${MINGW_PREFIX}/bin/tclsh86.exe" "${pkgdir}${MINGW_PREFIX}/bin/tclsh.exe"
+  find "${pkgdir}${MINGW_PREFIX}" -name '*.def' -o -name '*.exp' | xargs -rtl1 rm
+  find "${pkgdir}${MINGW_PREFIX}" -name '*.sh' -o -name '*.dll' -o -name '*.exe' | xargs -rtl1 chmod 755
+  rm "${pkgdir}${MINGW_PREFIX}/bin/zlib1.dll"
+  rm -r "${pkgdir}${MINGW_PREFIX}/lib/"sqlite*
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/man"
+  local _libver=${pkgver%.*}
+  _libver=${_libver//./}
+  local _odbc_ver=1.1.12
+  local _itcl_ver=4.3.4
+  sed \
+    -e "s|^\(TCL_BUILD_LIB_SPEC\)='.*|\1='-Wl,${MINGW_PREFIX}/lib/libtcl${_libver}.dll.a'|" \
+    -e "s|^\(TCL_SRC_DIR\)='.*'|\1='${MINGW_PREFIX}/include/tcl${pkgver%.*}/tcl-private'|" \
+    -e "s|^\(TCL_BUILD_STUB_LIB_SPEC\)='.*|\1='-Wl,${MINGW_PREFIX}/lib/libtclstub${_libver}.a'|" \
+    -e "s|^\(TCL_BUILD_STUB_LIB_PATH\)='.*|\1='${MINGW_PREFIX}/lib'|" \
+    -e "s|^\(TCL_STUB_LIB_SPEC\)='.*|\1='-L${MINGW_PREFIX}/lib -ltclstub${_libver}'|" \
+    -e "s|^\(TCL_INCLUDE_SPEC\)='.*|\1='-I${MINGW_PREFIX}/include/tcl${pkgver%.*}'|" \
+    -i "${pkgdir}${MINGW_PREFIX}/lib/tclConfig.sh"
+  sed \
+    -e "s|^\(tdbc_BUILD_STUB_LIB_SPEC\)='.*|\1='-L${MINGW_PREFIX}/lib/tdbc${_odbc_ver} -ltdbcstub${_odbc_ver//./}'|" \
+    -e "s|^\(TDBC_BUILD_STUB_LIB_SPEC\)='.*|\1='-L${MINGW_PREFIX}/lib/tdbc${_odbc_ver} -ltdbcstub${_odbc_ver//./}'|" \
+    -e "s|^\(tdbc_BUILD_STUB_LIB_PATH\)='.*|\1='${MINGW_PREFIX}/lib/tdbc${_odbc_ver}/libtdbcstub${_odbc_ver//./}.a'|" \
+    -e "s|^\(TDBC_BUILD_STUB_LIB_PATH\)='.*|\1='${MINGW_PREFIX}/lib/tdbc${_odbc_ver}/libtdbcstub${_odbc_ver//./}.a'|" \
+    -e "s|^\(tdbc_INCLUDE_SPEC\)='.*|\1='${MINGW_PREFIX}/lib/tdbc${_odbc_ver}/libtdbcstub${_odbc_ver//./}.a'|" \
+    -e "s|^\(tdbc_INCLUDE_SPEC\)='.*|\1='${MINGW_PREFIX}/lib/tdbc${_odbc_ver}/libtdbcstub${_odbc_ver//./}.a'|" \
+    -i "${pkgdir}${MINGW_PREFIX}/lib/tdbc${_odbc_ver}/tdbcConfig.sh"
+  sed \
+    -e "s|^\(itcl_BUILD_LIB_SPEC\)='.*|\1='-L${MINGW_PREFIX}/lib/itcl${_itcl_ver} -litcl${_itcl_ver//./}'|" \
+    -e "s|^\(ITCL_BUILD_LIB_SPEC\)='.*|\1='-L${MINGW_PREFIX}/lib/itcl${_itcl_ver} -litcl${_itcl_ver//./}'|" \
+    -e "s|^\(itcl_BUILD_STUB_LIB_SPEC\)='.*|\1='-L${MINGW_PREFIX}/lib/itcl${_itcl_ver} -litclstub${_itcl_ver//./}'|" \
+    -e "s|^\(ITCL_BUILD_STUB_LIB_SPEC\)='.*|\1='-L${MINGW_PREFIX}/lib/itcl${_itcl_ver} -litclstub${_itcl_ver//./}'|" \
+    -e "s|^\(itcl_BUILD_STUB_LIB_PATH\)='.*|\1='${MINGW_PREFIX}/lib/itcl${_itcl_ver}/libitclstub${_itcl_ver//./}.a'|" \
+    -e "s|^\(ITCL_BUILD_STUB_LIB_PATH\)='.*|\1='${MINGW_PREFIX}/lib/itcl${_itcl_ver}/libitclstub${_itcl_ver//./}.a'|" \
+    -e "s|^\(itcl_SRC_DIR\)='.*|\1=''|" \
+    -e "s|^\(ITCL_SRC_DIR\)='.*|\1=''|" \
+    -e "s|^\(itcl_INCLUDE_SPEC\)='.*|\1='-I${MINGW_PREFIX}/include'|" \
+    -e "s|^\(ITCL_INCLUDE_SPEC\)='.*|\1='-I${MINGW_PREFIX}/include'|" \
+    -i "${pkgdir}${MINGW_PREFIX}/lib/itcl${_itcl_ver}/itclConfig.sh"
+  cp "${pkgdir}${MINGW_PREFIX}/lib/libtcl86.dll.a" "${pkgdir}${MINGW_PREFIX}/lib/libtcl.dll.a"
+  cp "${pkgdir}${MINGW_PREFIX}/lib/tclConfig.sh" "${pkgdir}${MINGW_PREFIX}/lib/tcl${pkgver%.*.*}/tclConfig.sh"
+  chmod a-x "${pkgdir}${MINGW_PREFIX}/lib/tcl${pkgver%.*}/encoding/"*.enc
+  chmod a-x "${pkgdir}${MINGW_PREFIX}/lib/"*/pkgIndex.tcl
+  install -Dm644 "${srcdir}/tcl${pkgver}/win/tcl.m4" "${pkgdir}${MINGW_PREFIX}/share/aclocal/tcl${pkgver%.*}.m4"
+}

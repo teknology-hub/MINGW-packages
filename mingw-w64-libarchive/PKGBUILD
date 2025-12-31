@@ -1,0 +1,75 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname="libarchive"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Multi-format archive and compression library (mingw-w64)"
+pkgver=3.8.4
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.libarchive.org/"
+msys2_references=(
+  "archlinux: libarchive"
+  "cpe: cpe:/a:libarchive:libarchive"
+  "cygwin: libarchive"
+  "gentoo: app-arch/libarchive"
+)
+msys2_repository_url="https://github.com/libarchive/libarchive/"
+license=("spdx:BSD-2-Clause")
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-bzip2"
+  "${MINGW_PACKAGE_PREFIX}-expat"
+  "${MINGW_PACKAGE_PREFIX}-libb2"
+  "${MINGW_PACKAGE_PREFIX}-libiconv"
+  "${MINGW_PACKAGE_PREFIX}-lz4"
+  "${MINGW_PACKAGE_PREFIX}-openssl"
+  "${MINGW_PACKAGE_PREFIX}-xz"
+  "${MINGW_PACKAGE_PREFIX}-zlib"
+  "${MINGW_PACKAGE_PREFIX}-zstd"
+)
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://github.com/libarchive/libarchive/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"
+  "0001-static-lib-name.patch"
+)
+sha256sums=(
+  "c7b847b57feacf5e182f4d14dd6cae545ac6843d55cb725f58e107cdf1c9ad73"
+  "5ae64aff138555007b77b9d0caa107fc1417f72715820edae870f9883fb3d28f"
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/0001-static-lib-name.patch"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DENABLE_CAT_SHARED=ON \
+    -DENABLE_CPIO_SHARED=ON \
+    -DENABLE_LIBGCC=OFF \
+    -DENABLE_LIBXML2=OFF \
+    -DENABLE_PCREPOSIX=OFF \
+    -DENABLE_PCRE2POSIX=OFF \
+    -DENABLE_TAR_SHARED=ON \
+    -DENABLE_TEST=OFF \
+    -DENABLE_UNZIP_SHARED=ON \
+    -DENABLE_WIN32_XMLLITE=OFF \
+    -DPOSIX_REGEX_LIB="" \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+  sed -i -e "s|$(cygpath -wm ${MINGW_PREFIX})|${MINGW_PREFIX}|g" "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/libarchive.pc"
+}

@@ -1,0 +1,38 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname="libffi"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="A portable, high level programming interface to various calling conventions (mingw-w64)"
+pkgver=3.5.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://sourceware.org/libffi"
+msys2_references=("cpe: cpe:/a:libffi_project:libffi")
+msys2_repository_url="https://github.com/libffi/libffi"
+license=('spdx:MIT')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-libtool"
+)
+source=("https://github.com/libffi/libffi/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=("f3a3082a23b37c293a4fcd1053147b371f2ff91fa7ea1b2a52e335676bac82dc")
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  "${srcdir}/${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --enable-shared \
+    --enable-static \
+    --disable-symvers
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

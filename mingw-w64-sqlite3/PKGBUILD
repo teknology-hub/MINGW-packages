@@ -1,0 +1,67 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Renato Silva <br.renatosilva@gmail.com>
+# Upstream contributor: Brisingr Aerowing <ztgreve@live.com>
+
+_realname="sqlite3"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
+_amalgamationver=3510100
+pkgver=3.51.1
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.sqlite.org/"
+msys2_references=(
+  "archlinux: sqlite"
+  "cpe: cpe:/a:sqlite:sqlite"
+)
+msys2_repository_url="https://www.sqlite.org/cgi/src/dir?ci=trunk"
+license=("PublicDomain")
+depends=("${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-tcl"
+)
+source=(
+  "https://www.sqlite.org/2025/sqlite-src-${_amalgamationver}.zip"
+  "0001-sqlite-pcachetrace-include-sqlite3.patch"
+  "0002-fix-building-sqldiff.patch"
+  "0003-do-not-install-tclsqlite3-with-make.patch"
+  "0004-dont-misuse-tcl-extern.patch"
+)
+sha256sums=(
+  "0f8e765ac8ea7c36cf8ea9bffdd5c103564f4a8a635f215f9f783b338a13d971"
+  "6518119034ceb2820d058afcb099d11f636271f55a41ffae22855af66a369166"
+  "cf5c47c30e97f5493d2fad730a9bfcd33d20a0a052571e8e35b88f388d368724"
+  "a500428a3434075932de84247b1405f3d73e7ed0a8b664eb20a736bd02d6ed29"
+  "8dd2377afaad17fa85049be90bfc2bd757350343b3f64ff9bfbbcf3736593a34"
+)
+
+prepare() {
+  cd "${srcdir}/sqlite-src-${_amalgamationver}"
+  patch -Np1 -i "${srcdir}/0004-dont-misuse-tcl-extern.patch"
+}
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  CFLAGS+=" -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DISABLE_DIRSYNC -DSQLITE_OMIT_DEPRECATED"
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+  "${srcdir}/sqlite-src-${_amalgamationver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --disable-json \
+    --disable-load-extension \
+    --disable-math \
+    --disable-readline \
+    --disable-tcl \
+    --out-implib \
+    --with-tcl="${MINGW_PREFIX}/lib"
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

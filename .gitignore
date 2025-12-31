@@ -1,0 +1,13 @@
+*.asc
+*.exe
+*.sig
+*.sign
+*.tar.bz2
+*.tar.gz
+*.tar.lz
+*.tar.xz
+*.tar.zst
+*.tgz
+*.zip
+*/src/
+*/pkg/

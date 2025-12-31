@@ -1,0 +1,32 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: J. Peter Mugaas <jpmugaas@suddenlink.net>
+
+_realname="flit"
+pkgbase="mingw-w64-python-${_realname}-core"
+pkgname="${MINGW_PACKAGE_PREFIX}-python-${_realname}-core"
+pkgdesc="Simplified packaging of Python modules (core backend) (mingw-w64)"
+pkgver=3.12.0
+pkgrel=1
+arch=("any")
+mingw_arch=("tek-x86_64")
+url="https://flit.pypa.io/"
+msys2_references=("purl: pkg:pypi/flit-core")
+msys2_repository_url="https://github.com/pypa/flit/"
+license=("spdx:BSD-3-Clause")
+depends=("${MINGW_PACKAGE_PREFIX}-python")
+source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
+sha256sums=("1c80f34dd96992e7758b40423d2809f48f640ca285d0b7821825e50745ec3740")
+
+build() {
+  cd "${srcdir}/${_realname}-${pkgver}/flit_core"
+  PYTHONPATH=flit_core "${MINGW_PREFIX}/bin/python" -m flit_core.wheel
+}
+
+package() {
+  cd "${srcdir}/${_realname}-${pkgver}/flit_core"
+  local _site_packages="${pkgdir}$(cygpath $("${MINGW_PREFIX}/bin/python" -c "import sysconfig; print(sysconfig.get_path('platlib'))"))"
+  mkdir -p "${_site_packages}"
+  "${MINGW_PREFIX}/bin/python" bootstrap_install.py -i"${_site_packages}" dist/flit_core-*.whl
+  MSYS2_ARG_CONV_EXCL="-p" "${MINGW_PREFIX}/bin/python" -m compileall \
+    -o 0 -o 1 -q -s"${pkgdir}" -p"/" "${pkgdir}${MINGW_PREFIX}/lib/"python*
+}

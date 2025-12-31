@@ -1,0 +1,13 @@
+--- a/lib/vtls/vtls.c
++++ b/lib/vtls/vtls.c
+@@ -300,10 +300,8 @@ CURLcode Curl_ssl_easy_config_complete(struct Curl_easy *data)
+ #endif
+ 
+   if(Curl_ssl_backend() != CURLSSLBACKEND_SCHANNEL) {
+-#ifdef USE_APPLE_SECTRUST
+     if(!sslc->custom_capath && !sslc->custom_cafile && !sslc->custom_cablob)
+       sslc->native_ca_store = TRUE;
+-#endif
+ #ifdef CURL_CA_PATH
+     if(!sslc->custom_capath && !set->str[STRING_SSL_CAPATH]) {
+       result = Curl_setstropt(&set->str[STRING_SSL_CAPATH], CURL_CA_PATH);

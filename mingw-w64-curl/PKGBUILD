@@ -1,0 +1,101 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname="curl"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Command line tool and library for transferring data with URLs (mingw-w64)"
+pkgver=8.17.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://curl.se/"
+msys2_changelog_url="https://curl.se/changes.html"
+msys2_references=(
+  "cpe: cpe:/a:curl:curl"
+  "cpe: cpe:/a:curl:libcurl"
+  "cpe: cpe:/a:haxx:curl"
+  "cpe: cpe:/a:haxx:libcurl"
+  "cpe: cpe:/a:libcurl:libcurl"
+)
+msys2_repository_url="https://github.com/curl/curl"
+license=("spdx:MIT")
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-brotli"
+  "${MINGW_PACKAGE_PREFIX}-libidn2"
+  "${MINGW_PACKAGE_PREFIX}-nghttp2"
+  "${MINGW_PACKAGE_PREFIX}-nghttp3"
+  "${MINGW_PACKAGE_PREFIX}-ngtcp2"
+  "${MINGW_PACKAGE_PREFIX}-openssl"
+  "${MINGW_PACKAGE_PREFIX}-zlib"
+  "${MINGW_PACKAGE_PREFIX}-zstd"
+)
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://github.com/curl/curl/releases/download/${_realname}-${pkgver//./_}/${_realname}-${pkgver}.tar.xz"{,.asc}
+  "pathtools.c"
+  "pathtools.h"
+  "0001-Make-cURL-relocatable.patch"
+  "0002-ca-native-default.patch"
+)
+sha256sums=(
+  "955f6e729ad6b3566260e8fef68620e76ba3c31acf0a18524416a185acf77992"
+  "SKIP"
+  "ebf471173f5ee9c4416c10a78760cea8afaf1a4a6e653977321e8547ce7bf3c0"
+  "1585ef1b61cf53a2ca27049c11d49e0834683dfda798f03547761375df482a90"
+  "7f1f41dc4b53b11688844def2c1af9c0ac286a35fed3d0319ee6d5d7b7bcab6c"
+  "4193aab8670bc6db06ac6245fb0d4ed8c31c09b2df5b5846a6b240691682619b"
+)
+validpgpkeys=("27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2") # Daniel Stenberg
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  cp -fH "${srcdir}/pathtools."[ch] "${srcdir}/${_realname}-${pkgver}/lib/"
+  patch -Np1 -i "${srcdir}/0001-Make-cURL-relocatable.patch"
+  patch -Np1 -i "${srcdir}/0002-ca-native-default.patch"
+}
+
+build() {
+  CFLAGS+=" -DNGHTTP2_STATICLIB -DNGHTTP3_STATICLIB -DNGTCP2_STATICLIB"
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DBUILD_LIBCURL_DOCS=OFF \
+    -DBUILD_MISC_DOCS=OFF \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_STATIC_LIBS=ON \
+    -DCURL_BROTLI=ON \
+    -DCURL_DISABLE_CA_SEARCH=ON \
+    -DCURL_DISABLE_COOKIES=ON \
+    -DCURL_DISABLE_HTTP_AUTH=ON \
+    -DCURL_DISABLE_LIBCURL_OPTION=ON \
+    -DCURL_DISABLE_NETRC=ON \
+    -DCURL_DISABLE_NTLM=ON \
+    -DCURL_DISABLE_SHUFFLE_DNS=ON \
+    -DCURL_DISABLE_SRP=ON \
+    -DCURL_LTO=ON \
+    -DCURL_TARGET_WINDOWS_VERSION=0xA00 \
+    -DCURL_USE_LIBPSL=OFF \
+    -DCURL_USE_LIBSSH2=OFF \
+    -DCURL_USE_OPENSSL=ON \
+    -DCURL_ZLIB=ON \
+    -DCURL_ZSTD=ON \
+    -DENABLE_CURL_MANUAL=OFF \
+    -DENABLE_UNICODE=ON \
+    -DHTTP_ONLY=ON \
+    -DUSE_NGTCP2=ON \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  local PREFIX_DEPS="$(cygpath -am "${MINGW_PREFIX}")"
+  sed -s "s|${PREFIX_DEPS}|${MINGW_PREFIX}|g" -i "${pkgdir}${MINGW_PREFIX}/bin/curl-config"
+  sed -s "s|${PREFIX_DEPS}|${MINGW_PREFIX}|g" -i "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/libcurl.pc"
+}
