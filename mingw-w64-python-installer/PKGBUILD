@@ -6,7 +6,7 @@ pkgbase="mingw-w64-python-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-python-${_realname}"
 pkgdesc="A low-level library for installing from a Python wheel distribution (mingw-w64)"
 pkgver=0.7.0
-pkgrel=5
+pkgrel=6
 _launcher_commit="8c455825fc1308d34a1a47238a9eb6d56f732142"
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -48,9 +48,9 @@ prepare() {
 
 build() {
   cd "${srcdir}/simple_launcher"
-  "${MINGW_PREFIX}/bin/windres" --input launcher.rc --output resources.res --output-format=coff
-  "${MINGW_PREFIX}/bin/cc" ${CFLAGS} ${CPPFLAGS} -D_CONSOLE -o t64.exe launcher.c resources.res ${LDFLAGS} -lshlwapi
-  "${MINGW_PREFIX}/bin/cc" ${CFLAGS} ${CPPFLAGS} -mwindows -o w64.exe launcher.c resources.res ${LDFLAGS} -lshlwapi
+  "${MINGW_PREFIX}/bin/windres" --input launcher.rc --output resources.o --output-format=coff
+  "${MINGW_PREFIX}/bin/cc" ${CFLAGS} ${CPPFLAGS} -D_CONSOLE -o t64.exe launcher.c resources.o ${LDFLAGS} -lshlwapi
+  "${MINGW_PREFIX}/bin/cc" ${CFLAGS} ${CPPFLAGS} -mwindows -o w64.exe launcher.c resources.o ${LDFLAGS} -lshlwapi
   cd "${srcdir}/${_realname}-${pkgver}"
   rm src/installer/_scripts/*.exe
   cp "${srcdir}/simple_launcher/"*.exe src/installer/_scripts/

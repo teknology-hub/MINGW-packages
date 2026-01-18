@@ -22,7 +22,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-llvm-libs"
 )
 pkgdesc="C language family frontend for LLVM (mingw-w64)"
-pkgver=21.1.7
+pkgver=21.1.8
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -56,21 +56,21 @@ source=(
   "0303-ignore-new-bfd-options.patch"
 )
 sha256sums=(
-  "eeb5296f46eacc0a1fe6c47a1af9e8d4eb2a5da7254fd8dbc4fc1f1be74315a1"
+  "6090e3f23720d003cdd84483a47d0eec6d01adbb5e0c714ac0c8b58de546aa62"
   "SKIP"
-  "e03c2f904e9f7a9a128a2f57e4c50f12d52e11015e415fa784b496b43ce10159"
+  "6ddb7e731bf09ab821132e2e8a3c706b6d9c52c92a9ce9a9ed0976a9c6c28829"
   "SKIP"
-  "f25ca011e4453ac035e940aa729d482d08eb83a91b4aaf1f230dc9ea28cadfa4"
+  "85735f20fd8c81ecb0a09abb0c267018475420e93b65050cc5b7634eab744de9"
   "SKIP"
-  "4358e4476ab89b6ca9e4174f05f4a2c2c10e4a41c3c7febd25afe96bc27b5758"
+  "dd54ae21aee1780fac59445b51ebff601ad016b31ac3a7de3b21126fd3ccb229"
   "SKIP"
-  "607395fc8a5f4d14eb27b219a279558a172d1e3a34ddd2a3509c12b560f1930a"
+  "d9524c5ee952500a2af92c27042a0d90ab089962af47816d4c85d0ebf76373d1"
   "SKIP"
-  "8657ee188b673a3285b991131abe905b4129a18d52d334f9d122463164ecd000"
+  "d9022ddadb40a15015f6b27e6549a7144704ded8828ba036ffe4b8165707de21"
   "SKIP"
-  "7f87971685100bc2bd0fe54042c5140da100b0e37fa12fca888cf1d8d06a8e25"
+  "b6989d35cdfc1acee4af1d110fb8887f76831eb93e1df6ff7365004048742db8"
   "SKIP"
-  "5fe212feb27f325fa29530eb38e746a73d18205bf6a36d9800778a94108d2ee5"
+  "7fe99424384aea529ffaeec9cc9dfb8b451fd1852c03fc109e426fe208a1f1a7"
   "SKIP"
   "eb03df53671df6627768141b3aaa76abe176a14e5e47911c97bec544387c4aff"
   "d77d47e37e4948f5c01ae8bc05fb4e879b6516132c5a60c7bc820c9cbbb39668"
@@ -153,6 +153,7 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_SYSROOT="${MINGW_PREFIX}" \
     -DCLANG_LINKS_TO_CREATE="clang++;clang-cpp;as;c++;cc;cpp;${MINGW_CHOST}-cc;${MINGW_CHOST}-c++;${MINGW_CHOST}-clang;${MINGW_CHOST}-clang++" \
+    -DCOMPILER_RT_EXCLUDE_ATOMIC_BUILTIN=OFF \
     -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON \
     -DLIBCLANG_BUILD_STATIC=ON \
     -DLLD_DEFAULT_LD_LLD_IS_MINGW=ON \

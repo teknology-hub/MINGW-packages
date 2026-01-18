@@ -1,0 +1,39 @@
+From 47a67447af7a81717ec8a6e768b13158ff9f979c Mon Sep 17 00:00:00 2001
+From: Christoph Reiter <reiter.christoph@gmail.com>
+Date: Sun, 11 Jan 2026 18:13:43 +0100
+Subject: [PATCH] install: correct sysconfig scheme lookup on Windows
+
+distutils by default passes os.name, so "nt", to _resolve_scheme()
+which results in the layout key being "", which results in
+get_preferred_scheme() raising, and "nt" being returned as as a fallback.
+
+This is not correct in case sysconfig has a different scheme configuration,
+or in case we are installing into a venv, where the "venv" scheme should be
+selected and not "nt".
+
+Fix by defaulting to the "prefix" layout in case no layout is given.
+This gives us "nt" from sysconfig, and "venv" in case we are in a venv.
+With CPython the change from "nt" to "venv" doesn't change anything
+for distutils since that only means "headers" are missing, which distutils
+injects later, resulting in the same scheme paths.
+
+For MINGW Python which defaults to the "posix" scheme this fixes the default
+install location (up until now we patched the "nt" scheme to work around this
+but we want to fix the real issue now)
+---
+ distutils/command/install.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/distutils/command/install.py b/distutils/command/install.py
+index 8421d54e..6d8169e4 100644
+--- a/distutils/command/install.py
++++ b/distutils/command/install.py
+@@ -142,7 +142,7 @@ def _remove_set(ob, attrs):
+ def _resolve_scheme(name):
+     os_name, sep, key = name.partition('_')
+     try:
+-        resolved = sysconfig.get_preferred_scheme(key)
++        resolved = sysconfig.get_preferred_scheme(key or "prefix")
+     except Exception:
+         resolved = fw.scheme(name)
+     return resolved
