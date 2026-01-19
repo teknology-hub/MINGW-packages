@@ -1,0 +1,59 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Nicolas Bats <sl1200mk2@gmail.com>
+# Upstream contributor: Karlson2k (Evgeny Grin) <k2k@narod.ru>
+# Upstream contributor: Marcin Sielski <marcin.sielski@motorolasolutions.com>
+
+_realname="libmicrohttpd"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="GNU libmicrohttpd is a small C library that is supposed to make it easy to run an HTTP server as part of another application (mingw-w64)"
+pkgver=1.0.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.gnu.org/software/libmicrohttpd"
+msys2_references=("cpe: cpe:/a:gnu:libmicrohttpd")
+license=("spdx:LGPL-2.1-or-later")
+makedepends=(
+  "autotools"
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-libtool"
+  "${MINGW_PACKAGE_PREFIX}-pkgconf"
+)
+source=("https://ftp.gnu.org/gnu/libmicrohttpd/${_realname}-${pkgver}.tar.gz"{,.sig})
+sha256sums=(
+  "df324fcd0834175dab07483133902d9774a605bfa298025f69883288fd20a8c7"
+  "SKIP"
+)
+validpgpkeys=(
+  "D8423BCB326C7907033929C7939E6BE1E29FC3CC" # Christian Grothoff <christian@grothoff.org>
+  "EA812DBEFA5A7EF17DA8F2C1460A317C3326D2AE" # Karlson2k (Evgeny Grin) <k2k@narod.ru>
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  autoreconf -fiv
+}
+
+build() {
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  "${srcdir}/${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --disable-bauth \
+    --disable-cookie \
+    --disable-curl \
+    --disable-dauth \
+    --disable-doc \
+    --disable-examples \
+    --disable-https \
+    --disable-tools \
+    --enable-shared \
+    --enable-static
+  make -j$(nproc)
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+  make DESTDIR="${pkgdir}" install
+}

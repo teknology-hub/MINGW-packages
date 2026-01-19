@@ -12,4 +12,7 @@ It's forked from [MSYS2's repository](https://github.com/msys2/MINGW-packages) w
 
 There is no intention to keep this repository in sync with upstream, it will be updated once in a while
 
+This repository also includes packages for TEK software,:
+- [mingw-w64-tek-steamclient](https://github.com/teknology-hub/tek-steamclient), with a `-dist` split package that provides official statically linked release binaries
+
 The repository hosting binary packages is available at https://teknology-hub.com/software/mingw/tek-x86_64/. It's signed by Nuclearist's [GPG key](https://teknology-hub.com/public-keys/gpg/nuclearist.asc)
