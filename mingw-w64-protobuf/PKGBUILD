@@ -6,7 +6,7 @@ _realname="protobuf"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
-pkgver=33.1
+pkgver=33.5
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -29,12 +29,14 @@ makedepends=(
 )
 source=(
   "https://github.com/protocolbuffers/protobuf/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.gz"
+  "0001-fix-build-on-clangarm64.patch::https://github.com/protocolbuffers/protobuf/commit/0e84323c.patch"
   "0002-windres-invocation.patch"
   "0003-demote-error-about-buildtime-runtime-version-difference-to-warning.patch"
   "0005-pkgconfig-that-understands-static-libraries.patch"
 )
 sha256sums=(
-  "fda132cb0c86400381c0af1fe98bd0f775cb566cb247cdcc105e344e00acc30e"
+  "c6c7c27fadc19d40ab2eaa23ff35debfe01f6494a8345559b9bb285ce4144dd1"
+  "7a584ecac368c360493da594440d0d3ee3f63d1152908ef74aad560709caa655"
   "174f714b842d5153c79c5fda1ae775ee002aea11d53cb5d5f51cb5c4b9e63d29"
   "2b680e1c642ccd5bb70b3dcf7217c27360bc0b74f63d8afb66dd668173d9b2dd"
   "d118346d092caa8a3d6c02d88207d7cd9318fe3077b6b36cf32d1da79fe4128c"
@@ -42,6 +44,7 @@ sha256sums=(
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/0001-fix-build-on-clangarm64.patch"
   patch -Np1 -i "${srcdir}/0002-windres-invocation.patch"
   patch -Np1 -i "${srcdir}/0003-demote-error-about-buildtime-runtime-version-difference-to-warning.patch"
   patch -Np1 -i "${srcdir}/0005-pkgconfig-that-understands-static-libraries.patch"

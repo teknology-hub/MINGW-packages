@@ -6,7 +6,7 @@ _realname="cmake"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A cross-platform open-source make system (mingw-w64)"
-pkgver=4.2.1
+pkgver=4.2.3
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -37,14 +37,12 @@ makedepends=(
 source=(
   "https://github.com/Kitware/CMake/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.gz"
   "0001-Disable-response-files-for-MSYS-Generator.patch"
-  "0002-Do-not-install-Qt-bundle-in-cmake-gui.patch"
   "0003-fix-find-python-on-mingw-aarch64.patch"
   "0005-Default-to-ninja-generator.patch"
 )
 sha256sums=(
-  "414aacfac54ba0e78e64a018720b64ed6bfca14b587047b8b3489f407a14a070"
+  "7efaccde8c5a6b2968bad6ce0fe60e19b6e10701a12fce948c2bf79bac8a11e9"
   "25793edcbac05bb6d17fa9947b52ace4a6b5ccccf7758e22ae9ae022ed089061"
-  "f6cf6a6f2729db2b9427679acd09520af2cd79fc26900b19a49cead05a55cd1a"
   "557b5cbc05d4d50b3a67a7892391fcaa5cd95c492cdb4338d86305d1f4a3b88a"
   "426818278090704d2a12f62ef3dfd94c47b11fa2784bb842989b7f6a09ee7aa2"
 )

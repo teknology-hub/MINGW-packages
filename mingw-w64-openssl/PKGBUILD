@@ -5,7 +5,7 @@ _realname="openssl"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (mingw-w64)"
-pkgver=3.6.0
+pkgver=3.6.1
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -20,15 +20,15 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc")
 source=(
   "https://github.com/openssl/openssl/releases/download/${_realname}-${pkgver}/${_realname}-${pkgver}.tar.gz"{,.asc}
   "002-relocation.patch"
-  "003-no-set_printf_count_output.patch"
+  "004-arch-suffix.patch"
   "pathtools.c"
   "pathtools.h"
 )
 sha256sums=(
-  "b6a5f44b7eb69e3fa35dbf15524405b44837a481d43d81daddde3ff21fcbb8e9"
+  "b1bfedcd5b289ff22aee87c9d600f515767ebf45f77168cb6d64f231f518a82e"
   "SKIP"
-  "fdc83cb231ed89e9fea70bc82e487427be8eb07417c1bbc3f0aa8561e79de9f3"
-  "90ff62d4f25f641d4eb06aa5400c2bc1ed92c3ad3b4040507b6a4323930c621c"
+  "3e9a8abb6ff5fb7bdb450742fb7bd85513a4abbe85594228620379bcac7c02ef"
+  "6a686ef69c2b196fb1420389ccd0db84582fd288942560d5eba963c11ce8595a"
   "ebf471173f5ee9c4416c10a78760cea8afaf1a4a6e653977321e8547ce7bf3c0"
   "1585ef1b61cf53a2ca27049c11d49e0834683dfda798f03547761375df482a90"
 )
@@ -37,7 +37,7 @@ validpgpkeys=("BA5473A2B0587B07FB27CF2D216094DFD0CB81EF") # openssl@openssl.org
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
   patch -Np1 -i "${srcdir}/002-relocation.patch"
-  patch -Np1 -i "${srcdir}/003-no-set_printf_count_output.patch"
+  patch -Np1 -i "${srcdir}/004-arch-suffix.patch"
   cp -fH "${srcdir}/pathtools.c" "${srcdir}/${_realname}-${pkgver}/crypto/"
   cp -fH "${srcdir}/pathtools.h" "${srcdir}/${_realname}-${pkgver}/"
 }

@@ -7,7 +7,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}-dist"
 )
 pkgdesc="An open-source partial Steam client implementation"
-pkgver=2.1.1
+pkgver=2.1.2
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -32,11 +32,11 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-rapidjson"
 )
 source=(
-  "https://github.com/teknology-hub/tek-steamclient/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.zst"{,.sig}
-  "https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.1.tar.gz"
+  "https://teknology-hub.com/software/tek-steamclient/releases/${pkgver}/src/${_realname}-${pkgver}.tar.zst"{,.sig}
+  "ValveFileVDF-1.1.1.tar.gz::https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.1.tar.gz"
 )
 sha256sums=(
-  "4b5edfd8d496d17358e6aae56659189b39c51d85403be8ae0e5d43b0bf84d6e3"
+  "e881e30deb03e37654f6c4c38da9ecef47d85ac74ec7334fcee913e209f00f2e"
   "SKIP"
   "de16a199c535c3b49f2aa0bd17e3154e02b32fa7b0949053ba6d981f8c32197f"
 )
@@ -50,12 +50,12 @@ prepare() {
 
 build() {
   local _common_config=(
-    --prefix="${MINGW_PREFIX}" \
-    --buildtype=debugoptimized \
-    --default-library=both \
-    -Db_lto=true \
-    -Db_lto_mode=thin \
-    -Db_ndebug=true \
+    --prefix="${MINGW_PREFIX}"
+    --buildtype=debugoptimized
+    --default-library=both
+    -Db_lto=true
+    -Db_lto_mode=thin
+    -Db_ndebug=true
   )
   MSYS2_ARG_CONV_EXCL="--prefix=" \
   "${MINGW_PREFIX}/bin/meson" setup \

@@ -5,8 +5,8 @@ _realname="packaging"
 pkgbase="mingw-w64-python-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-python-${_realname}"
 pkgdesc="Core utilities for Python packages (mingw-w64)"
-pkgver=25.0
-pkgrel=2
+pkgver=26.0
+pkgrel=1
 arch=("any")
 mingw_arch=("tek-x86_64")
 url="https://github.com/pypa/packaging"
@@ -21,7 +21,7 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-installer"
 )
 source=("https://pypi.io/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=("d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f")
+sha256sums=("00243ae351a257117b6a241061796684b084ed1c516a08c48a3f7e147a9d80b4")
 
 build() {
   cp -r "${srcdir}/${_realname}-${pkgver}" "${srcdir}/build-${MSYSTEM}"

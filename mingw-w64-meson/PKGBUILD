@@ -5,8 +5,8 @@ _realname="meson"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="High-productivity build system (mingw-w64)"
-pkgver=1.10.0
-pkgrel=4
+pkgver=1.10.1
+pkgrel=1
 arch=("any")
 mingw_arch=("tek-x86_64")
 url="https://mesonbuild.com/"
@@ -33,16 +33,14 @@ source=(
   "0002-Default-to-sys.prefix-as-the-default-prefix.patch"
   "0004-fix-gtk-doc.patch"
   "https://github.com/mesonbuild/meson/pull/15387.patch"
-  "0005-rust-linker-fix.patch"
   "0006-allow-drive-relative-prefix.patch"
 )
 sha256sums=(
-  "8071860c1f46a75ea34801490fd1c445c9d75147a65508cd3a10366a7006cc1c"
+  "c42296f12db316a4515b9375a5df330f2e751ccdd4f608430d41d7d6210e4317"
   "5805aed0a117536eb16dd8eef978c6be57c2471b655ede63e25517c28b4f4cf0"
   "032b38f0b2765dc88e1fcb34e27b69b611e07c869c13c6e703bcf182e586fccb"
   "bc43a2695498885afa08f2aeb927d6958741aa1a9fc66850de1a6c79fdf59241"
   "dda29950cd44fa947b2eecea33d764b8c276e3cbf58897780128d3b551fe7209"
-  "de7a8b42fad5431f6111659a6bba636e3e93fe1627d7ed4c3e2e93ee10b7b674"
   "8d636db57fdd44abcbc0201d001c599bfa5bbbac6d787e002ead54021c1b14e3"
 )
 
@@ -52,7 +50,6 @@ prepare() {
   patch -Np1 -i "${srcdir}/0002-Default-to-sys.prefix-as-the-default-prefix.patch"
   patch -Np1 -i "${srcdir}/0004-fix-gtk-doc.patch"
   patch -Np1 -i "${srcdir}/15387.patch"
-  patch -Np1 -i "${srcdir}/0005-rust-linker-fix.patch"
   patch -Np1 -i "${srcdir}/0006-allow-drive-relative-prefix.patch"
 }
 
