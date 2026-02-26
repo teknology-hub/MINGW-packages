@@ -15,6 +15,7 @@ arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.gnu.org/software/libtool"
 msys2_references=("cpe: cpe:/a:gnu:libtool")
+msys2_repository_url="https://cgit.git.savannah.gnu.org/cgit/libtool.git"
 license=("spdx:LGPL-2.0-or-later WITH Libtool-exception")
 makedepends=(
   "autotools"

@@ -12,6 +12,7 @@ pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 msys2_references=("cpe: cpe:/a:llvm:llvm")
+msys2_repository_url="https://github.com/llvm/llvm-project"
 license=("spdx:Apache-2.0 WITH LLVM-exception")
 groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
 makedepends=(

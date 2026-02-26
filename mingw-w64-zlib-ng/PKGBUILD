@@ -8,7 +8,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}-compat"
 )
 pkgdesc="zlib replacement with optimizations for next generation systems (mingw-w64)"
-pkgver=2.3.2
+pkgver=2.3.3
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -18,6 +18,7 @@ msys2_references=(
   "archlinux: zlib-ng"
   "gentoo: sys-libs/zlib-ng"
 )
+msys2_repository_url="https://github.com/zlib-ng/zlib-ng"
 license=("spdx:Zlib")
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
@@ -29,7 +30,7 @@ source=(
   "0002-fix-compat-symbol-overlap.patch"
 )
 sha256sums=(
-  "6a0561b50b8f5f6434a6a9e667a67026f2b2064a1ffa959c6b2dae320161c2a8"
+  "f9c65aa9c852eb8255b636fd9f07ce1c406f061ec19a2e7d508b318ca0c907d1"
   "552965cd9a6dcad46a12429dbda491bd4693e0209cb695f41412524c2fa12f20"
   "2cc48d450c7d1e6af9984ac8c0fa4b1222f6bee6057733bd9faf8c756b1ad47e"
 )

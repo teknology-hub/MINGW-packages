@@ -12,6 +12,7 @@ arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://sourceware.org/bzip2/"
 msys2_references=("cpe: cpe:/a:bzip:bzip2")
+msys2_repository_url="https://sourceware.org/git/?p=bzip2.git"
 license=("custom")
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 makedepends=(

@@ -12,6 +12,7 @@ arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/pradyunsg/installer"
 msys2_references=("purl: pkg:pypi/installer")
+msys2_repository_url="https://github.com/pradyunsg/installer"
 license=("spdx:MIT")
 depends=("${MINGW_PACKAGE_PREFIX}-python")
 makedepends=(

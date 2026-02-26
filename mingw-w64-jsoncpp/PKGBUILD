@@ -11,6 +11,7 @@ arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/open-source-parsers/jsoncpp"
 msys2_references=("cpe: cpe:2.3:a:jsoncpp_project:jsoncpp")
+msys2_repository_url="https://github.com/open-source-parsers/jsoncpp"
 license=("spdx:MIT")
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 makedepends=(

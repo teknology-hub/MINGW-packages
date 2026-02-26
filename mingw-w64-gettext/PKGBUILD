@@ -9,8 +9,8 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}-libtextstyle"
   "${MINGW_PACKAGE_PREFIX}-${_realname}-tools"
 )
-pkgver=0.26
-pkgrel=2
+pkgver=1.0
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.gnu.org/software/gettext/"
@@ -31,10 +31,9 @@ source=(
   "0022-libasprintf.patch"
   "0024-disable-gnu-format.patch"
   "0030-fix-build-with-mingw-w64-clang.patch"
-  "0101-fix-build-with-clang-21.patch"
 )
 sha256sums=(
-  "d1fb86e260cfe7da6031f94d2e44c0da55903dbae0a2fa0fae78c91ae1b56f00"
+  "71132a3fb71e68245b8f2ac4e9e97137d3e5c02f415636eb508ae607bc01add7"
   "SKIP"
   "cbc2f533012d646521afa20f8b256917fce040741ff42cf53fb6dd7123a6670a"
   "ec39103d851262c02c27b7038f3c538e03afaefc6aa050311d62519d192ff38c"
@@ -42,7 +41,6 @@ sha256sums=(
   "c354f6a7021069c99b90f1c6d6f6a4ccf40a01e9f6742b866df2b5a7286cb868"
   "ce7ccf6dd3a492cab322253cd67310899b546eccc25821c25cbc047a1a984633"
   "9b1b4f0c65b3bc1a3103c921a02c203cecf533d145f0bd90023406e760f81749"
-  "0055847af8154f3b33858f724fdf0b2df92645c86f220ea79dac847c09f4d358"
 )
 validpgpkeys=(
   "462225C3B46F34879FC8496CD605848ED7E69871" # Daiki Ueno
@@ -58,7 +56,6 @@ prepare() {
   patch -Np1 -i "${srcdir}/0022-libasprintf.patch"
   patch -Np1 -i "${srcdir}/0024-disable-gnu-format.patch"
   patch -Np1 -i "${srcdir}/0030-fix-build-with-mingw-w64-clang.patch"
-  patch -Np1 -i "${srcdir}/0101-fix-build-with-clang-21.patch"
   "${MINGW_PREFIX}/bin/libtoolize" --automake --copy --force
   WANT_AUTOMAKE=latest ./autogen.sh --skip-gnulib
 }
@@ -83,6 +80,7 @@ build() {
     --enable-shared \
     --enable-static \
     --enable-threads=windows \
+    --with-included-libunistring \
     --without-emacs \
     --without-git \
     lt_cv_deplibs_check_method='pass_all' \

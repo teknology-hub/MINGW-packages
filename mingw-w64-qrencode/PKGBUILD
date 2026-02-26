@@ -10,6 +10,7 @@ pkgrel=4
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://fukuchi.org/works/qrencode/index.en.html"
+msys2_references=("cpe: cpe:/a:qrencode_project:qrencode")
 msys2_repository_url="https://github.com/fukuchi/libqrencode"
 license=("spdx:LGPL-2.1-or-later")
 depends=("${MINGW_PACKAGE_PREFIX}-winpthreads")

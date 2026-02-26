@@ -10,6 +10,7 @@ pkgrel=3
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://blake2.net/"
+msys2_repository_url="https://github.com/BLAKE2/libb2"
 license=("custom:CC0")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc")
 source=(

@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="System V Release 4.0 curses emulation library (mingw-w64)"
 pkgver=6.6
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.gnu.org/software/ncurses/"
@@ -72,6 +72,7 @@ build() {
 package() {
   cd "${srcdir}/build-${MSYSTEM}"
   make DESTDIR="${pkgdir}" install
+  rm "${pkgdir}${MINGW_PREFIX}/include/ncursesw/nc_win32.h"
   cp -r "${pkgdir}${MINGW_PREFIX}/include/ncursesw" "${pkgdir}${MINGW_PREFIX}/include/ncurses"
   cp "${pkgdir}${MINGW_PREFIX}/lib/libncursesw.a" "${pkgdir}${MINGW_PREFIX}/lib/libncurses.a"
   for pcfile in "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/"*.pc; do

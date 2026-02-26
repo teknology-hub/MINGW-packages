@@ -15,6 +15,7 @@ msys2_references=(
   "archlinux: pkgconf"
   "cpe: cpe:/a:pkgconf:pkgconf"
 )
+msys2_repository_url="https://github.com/pkgconf/pkgconf"
 license=("spdx:ISC")
 groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
 makedepends=(

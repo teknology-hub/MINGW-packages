@@ -16,6 +16,7 @@ msys2_references=(
   "cpe: cpe:/a:google:brotli"
   "gentoo: app-arch/brotli"
 )
+msys2_repository_url="https://github.com/google/brotli"
 license=("spdx:MIT")
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"

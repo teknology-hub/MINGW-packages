@@ -14,6 +14,7 @@ msys2_references=(
   "archlinux: minizip-ng"
   "cpe: cpe:2.3:a:zlib-ng:minizip-ng"
 )
+msys2_repository_url="https://github.com/zlib-ng/minizip-ng"
 license=("spdx:Zlib")
 depends=("${MINGW_PACKAGE_PREFIX}-zlib-ng")
 makedepends=(
