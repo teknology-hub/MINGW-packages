@@ -1,0 +1,44 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+
+_realname="tek-game-runtime"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-dist"
+pkgdesc="Injectable DLL for modifying game functions (release binary)"
+pkgver=1.2.0
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://github.com/teknology-hub/tek-game-runtime"
+license=("GPL-3.0-or-later")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-meson"
+  "${MINGW_PACKAGE_PREFIX}-rapidjson"
+  "${MINGW_PACKAGE_PREFIX}-tek-steamclient"
+)
+source=("https://teknology-hub.com/software/tek-game-runtime/releases/${pkgver}/src/${_realname}-${pkgver}.tar.zst"{,.sig})
+sha256sums=(
+  "6e96c0283da58d89b7a7047753632eebab28642abded6e5c9f59e263c13a8914"
+  "SKIP"
+)
+validpgpkeys=("F021C4E2C06A2D2AE01688EFA5B1020268A1093A") # Nuclearist
+
+build() {
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+  "${MINGW_PREFIX}/bin/meson" setup \
+    --buildtype=debugoptimized \
+    -Db_lto=true \
+    -Db_lto_mode=thin \
+    -Db_ndebug=true \
+    "${srcdir}/build-${MSYSTEM}-dist" \
+    "${srcdir}/${_realname}-${pkgver}"
+  "${MINGW_PREFIX}/bin/meson" compile -C "${srcdir}/build-${MSYSTEM}-dist"
+}
+
+package() {
+  mkdir -p "${pkgdir}/var/dist/tek-game-runtime/${pkgver}"
+  cd "${pkgdir}/var/dist/tek-game-runtime/${pkgver}"
+  cp "${srcdir}/build-${MSYSTEM}-dist/libtek-game-runtime.dll" ./
+  "${MINGW_PREFIX}/bin/strip" --strip-unneeded libtek-game-runtime.dll
+  cp "${srcdir}/build-${MSYSTEM}-dist/libtek-game-runtime.pdb" ./
+}

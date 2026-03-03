@@ -14,5 +14,6 @@ There is no intention to keep this repository in sync with upstream, it will be 
 
 This repository also includes packages for TEK software,:
 - [mingw-w64-tek-steamclient](https://github.com/teknology-hub/tek-steamclient), with a `-dist` split package that provides official statically linked release binaries
+- [mingw-w64-tek-game-runtime-dist](https://github.com/teknology-hub/tek-game-runtime) that provides official release binary
 
 The repository hosting binary packages is available at https://teknology-hub.com/software/mingw/tek-x86_64/. It's signed by Nuclearist's [GPG key](https://teknology-hub.com/public-keys/gpg/nuclearist.asc)
