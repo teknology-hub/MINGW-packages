@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickLayouts
+Description: Qt QuickLayouts module
+Version: PKGVER
+Requires: Qt6Core Qt6Qml
+Libs: -L${libdir} -lQt6QuickLayouts
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Layouts -lqquicklayoutsplugin
+Cflags: -I${includedir}/QtQuickLayouts -I${includedir} -DQT_QUICKLAYOUTS_LIB

@@ -1,0 +1,9 @@
+prefix=MINGW_PREFIX
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QmlIntegration
+Description: Qt QmlIntegration module
+Version: PKGVER
+Requires: Qt6Core
+Cflags: -I${includedir}/QtQmlIntegration -I${includedir} -DQT_QMLINTEGRATION_LIB

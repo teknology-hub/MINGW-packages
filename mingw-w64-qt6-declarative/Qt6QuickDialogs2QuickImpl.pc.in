@@ -1,0 +1,15 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickDialogs2QuickImpl
+Description: Qt QuickDialogs2QuickImpl module
+Version: PKGVER
+Requires: Qt6Core Qt6Gui Qt6Quick
+Requires.private: Qt6QuickDialogs2Utils
+Libs: -L${libdir} -lQt6QuickDialogs2QuickImpl
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Dialogs/quickimpl -lqtquickdialogs2quickimplplugin
+Cflags: -I${includedir}/QtQuickDialogs2QuickImpl -I${includedir} -DQT_QUICKDIALOGS2QUICKIMPL_LIB

@@ -1,0 +1,52 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname="pcre2"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="A library that implements Perl 5-style regular expressions (mingw-w64)"
+pkgver=10.47
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://pcre.org/"
+msys2_changelog_url="https://github.com/PCRE2Project/pcre2/blob/master/NEWS"
+msys2_references=(
+  "archlinux: pcre2"
+  "cpe: cpe:/a:pcre:pcre"
+  "cpe: cpe:/a:pcre:pcre2"
+)
+msys2_repository_url="https://github.com/PCRE2Project/pcre2"
+license=("spdx:BSD-3-Clause")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=("https://github.com/PCRE2Project/pcre2/releases/download/${_realname}-${pkgver}/${_realname}-${pkgver}.tar.bz2"{,.sig})
+sha256sums=(
+  "47fe8c99461250d42f89e6e8fdaeba9da057855d06eb7fc08d9ca03fd08d7bc7"
+  "SKIP"
+)
+validpgpkeys=("A95536204A3BB489715231282A98E77EB6F24CA8") # Nicholas Wilson <nicholas@nicholaswilson.me.uk>
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DBUILD_SHARED_LIBS=ON \
+    -DPCRE2_BUILD_PCRE2_8=OFF \
+    -DPCRE2_BUILD_PCRE2_16=ON \
+    -DPCRE2_BUILD_PCRE2_32=OFF \
+    -DPCRE2_BUILD_PCRE2GREP=OFF \
+    -DPCRE2_BUILD_TESTS=OFF \
+    -DPCRE2_SUPPORT_JIT=ON \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

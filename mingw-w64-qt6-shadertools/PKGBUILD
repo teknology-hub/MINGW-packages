@@ -1,0 +1,61 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream contributor: Mehdi Chinoune <mehdi.chinoune@hotmail.com>
+
+_realname="qt6-shadertools"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="APIs and tools in this module provide the producer functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenGL. (mingw-w64)"
+pkgver=6.10.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.qt.io"
+msys2_references=(
+  "archlinux: qt6-shadertools"
+  "cpe: cpe:/a:qt:qt"
+)
+msys2_repository_url="https://code.qt.io/cgit/qt/qtshadertools.git"
+license=("spdx:LGPL-3.0-only WITH Qt-GPL-exception-1.0 AND BSD-3-Clause AND GFDL-1.3-no-invariants-only AND GPL-2.0-only AND GPL-3.0-only")
+groups=("${MINGW_PACKAGE_PREFIX}-qt6")
+depends=("${MINGW_PACKAGE_PREFIX}-qt6-base")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+_pkgfn="${_realname/6-/}-everywhere-src-${pkgver}"
+# download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use Yandex mirror instead
+source=(
+  "https://mirror.yandex.ru/mirrors/qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfn}.tar.xz"
+  "Qt6ShaderTools.pc.in"
+)
+sha256sums=(
+  "18d9dbbc4f7e6e96e6ed89a9965dc032e2b58158b65156c035537826216716c9"
+  "6e797cc0a2cd58a49733fd1f34f6ddc11f97ac00e469f6376f1c4594b9b23be6"
+)
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DQT_GENERATE_SBOM=OFF \
+    -S "${srcdir}/${_pkgfn}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  local PREFIX_WIN="$(cygpath -m "${MINGW_PREFIX}")"
+  find "${pkgdir}${MINGW_PREFIX}/lib/cmake" -type f \( -name '*.cmake' \) \
+      -exec sed -i -e "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" {} \;
+  find "${pkgdir}${MINGW_PREFIX}/share/qt6" -type f \( -name '*.pri' \) \
+      -exec sed -i -e "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" {} \;
+  mkdir -p "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig"
+  # Create .pc file manually because the project doesn't produce them for
+  # static builds, and meson's qmake-based discovery method doesn't link
+  # transitive dependencies
+  sed "s|MINGW_PREFIX|${MINGW_PREFIX}|;s|PKGVER|${pkgver}|" "${srcdir}/Qt6ShaderTools.pc.in" > "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/Qt6ShaderTools.pc"
+}

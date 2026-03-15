@@ -9,7 +9,7 @@ pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
 _amalgamationver=3510200
 pkgver=3.51.2
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.sqlite.org/"
@@ -40,7 +40,7 @@ prepare() {
 
 build() {
   mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
-  CFLAGS+=" -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DISABLE_DIRSYNC -DSQLITE_OMIT_DEPRECATED"
+  CFLAGS+=" -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DISABLE_DIRSYNC -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_OMIT_DEPRECATED"
   MSYS2_ARG_CONV_EXCL="--prefix=" \
   "${srcdir}/sqlite-src-${_amalgamationver}/configure" \
     --prefix="${MINGW_PREFIX}" \

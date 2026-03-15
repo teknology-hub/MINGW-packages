@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickVectorImage
+Description: Qt QuickVectorImage module
+Version: PKGVER
+Requires.private: Qt6QuickVectorImageHelpers
+Libs: -L${libdir} -lQt6QuickVectorImage
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/VectorImage -lqquickvectorimageplugin
+Cflags: -I${includedir}/QtQuickVectorImage -I${includedir} -DQT_QUICKVECTORIMAGE_LIB

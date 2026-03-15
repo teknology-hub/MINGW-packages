@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickControls2Impl
+Description: Qt QuickControls2Impl module
+Version: PKGVER
+Requires: Qt6Core Qt6Gui Qt6Quick
+Libs: -L${libdir} -lQt6QuickControls2Impl
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Controls/impl -lqtquickcontrols2implplugin
+Cflags: -I${includedir}/QtQuickControls2Impl -I${includedir} -DQT_QUICKCONTROLS2IMPL_LIB

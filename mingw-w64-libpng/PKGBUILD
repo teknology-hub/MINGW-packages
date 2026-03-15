@@ -1,0 +1,58 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname="libpng"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="A collection of routines used to create PNG format graphics (mingw-w64)"
+pkgver=1.6.55
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="http://www.libpng.org/pub/png/libpng.html"
+msys2_references=(
+  "anitya: 1705"
+  "cpe: cpe:/a:greg_roelofs:libpng"
+  "cpe: cpe:/a:libpng:libpng"
+)
+msys2_repository_url="https://github.com/pnggroup/libpng"
+license=("custom")
+depends=("${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+source=(
+  "https://downloads.sourceforge.net/sourceforge/libpng/${_realname}-${pkgver}.tar.xz"
+  "apng.patch"
+)
+sha256sums=(
+  "d925722864837ad5ae2a82070d4b2e0603dc72af44bd457c3962298258b8e82d"
+  "0e3aca8a0f85c2bc1225cf04af030fe07b24ed1835ce7fa03227e12dc32206d4"
+)
+validpgpkeys=("8048643BA2C840F4F92A195FF54984BFA16C640F") # Glenn Randers-Pehrson (mozilla) <glennrp+bmo@gmail.com>
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/apng.patch"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DPNG_TESTS=OFF \
+    -DPNG_TOOLS=OFF \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package () {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  cp "${pkgdir}${MINGW_PREFIX}/bin/libpng16.dll" "${pkgdir}${MINGW_PREFIX}/bin/libpng.dll"
+  mv "${pkgdir}${MINGW_PREFIX}/lib/libpng.dll" "${pkgdir}${MINGW_PREFIX}/lib/libpng.dll.a"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}
+

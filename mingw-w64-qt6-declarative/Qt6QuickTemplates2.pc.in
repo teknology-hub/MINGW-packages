@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickTemplates2
+Description: Qt QuickTemplates2 module
+Version: PKGVER
+Requires: Qt6Core Qt6Gui Qt6Quick Qt6QmlModels
+Libs: -L${libdir} -lQt6QuickTemplates2
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Templates -lqtquicktemplates2plugin
+Cflags: -I${includedir}/QtQuickTemplates2 -I${includedir} -DQT_QUICKTEMPLATES2_LIB

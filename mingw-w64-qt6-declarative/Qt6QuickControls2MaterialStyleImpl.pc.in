@@ -1,0 +1,13 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickControls2MaterialStyleImpl
+Description: Qt QuickControls2MaterialStyleImpl module
+Version: PKGVER
+Libs: -L${libdir} -lQt6QuickControls2MaterialStyleImpl
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Controls/Material/impl -lqtquickcontrols2materialstyleimplplugin
+Cflags: -I${includedir}/QtQuickControls2MaterialStyleImpl -I${includedir} -DQT_QUICKCONTROLS2MATERIALSTYLEIMPL_LIB

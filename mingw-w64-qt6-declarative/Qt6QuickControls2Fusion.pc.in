@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickControls2Fusion
+Description: Qt QuickControls2Fusion module
+Version: PKGVER
+Requires.private: Qt6QuickControls2FusionStyleImpl
+Libs: -L${libdir} -lQt6QuickControls2Fusion
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Controls/Fusion -lqtquickcontrols2fusionstyleplugin
+Cflags: -I${includedir}/QtQuickControls2Fusion -I${includedir} -DQT_QUICKCONTROLS2FUSION_LIB

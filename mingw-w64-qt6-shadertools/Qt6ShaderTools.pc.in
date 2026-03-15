@@ -1,0 +1,12 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 ShaderTools
+Description: Qt ShaderTools module
+Version: PKGVER
+Requires: Qt6Core Qt6Gui
+Libs: -L${libdir} -lQt6ShaderTools
+Cflags: -I${includedir}/QtShaderTools -I${includedir} -DQT_SHADERTOOLS_LIB

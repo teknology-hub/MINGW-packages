@@ -1,0 +1,141 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream contributor: Mehdi Chinoune <mehdi.chinoune@hotmail.com>
+
+_realname="qt6-base"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="A cross-platform application and UI framework (mingw-w64)"
+pkgver=6.10.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.qt.io"
+msys2_references=(
+  'archlinux: qt6-base'
+  "cpe: cpe:/a:qt:qt"
+)
+msys2_repository_url="https://code.qt.io/cgit/qt/qtbase.git"
+license=("spdx:LGPL-3.0-only WITH Qt-GPL-exception-1.0 AND AFL-2.1 AND Apache-2.0 AND BSL-1.0 AND CC0-1.0 AND BSD-3-Clause AND CC-BY-4.0 AND GFDL-1.3-no-invariants-only AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-3.0-only AND custom")
+groups=("${MINGW_PACKAGE_PREFIX}-qt6")
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-cppwinrt"
+  "${MINGW_PACKAGE_PREFIX}-double-conversion"
+  "${MINGW_PACKAGE_PREFIX}-libb2"
+  "${MINGW_PACKAGE_PREFIX}-libjpeg-turbo"
+  "${MINGW_PACKAGE_PREFIX}-libpng"
+  "${MINGW_PACKAGE_PREFIX}-openssl"
+  "${MINGW_PACKAGE_PREFIX}-pcre2"
+  "${MINGW_PACKAGE_PREFIX}-sqlite3"
+  "${MINGW_PACKAGE_PREFIX}-zlib"
+  "${MINGW_PACKAGE_PREFIX}-zstd"
+)
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+  "${MINGW_PACKAGE_PREFIX}-pkgconf"
+)
+_pkgfn="${_realname/6-/}-everywhere-src-${pkgver}"
+# download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use Yandex mirror instead
+source=(
+  "https://mirror.yandex.ru/mirrors/qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfn}.tar.xz"
+  "003-adjust-qmake-conf-mingw.patch"
+  "004-qt-6.2.0-win32-g-Add-QMAKE_EXTENSION_IMPORTLIB-defaulting-to-.patch"
+  "006-qt-6.2.0-dont-add-resource-files-to-qmake-libs.patch"
+  "009-qfileinfo-undefine-mingw-stat.patch"
+  "Qt6Concurrent.pc.in"
+  "Qt6Core.pc.in"
+  "Qt6Gui.pc.in"
+  "Qt6Sql.pc.in"
+  "Qt6Xml.pc.in"
+)
+sha256sums=(
+  "aeb78d29291a2b5fd53cb55950f8f5065b4978c25fb1d77f627d695ab9adf21e"
+  "68156b8b7717a0ce19c4b991942469171bfa048cd5c90765115a546e65669a1d"
+  "ed5b61bcb367bbda459bec903d796ea45604278f577a988d602ade07ec6bf363"
+  "4085a10b290b8e3d930de535cbad2ba3e643432cba433aa2b28fe664f86d38a3"
+  "f4261d43a142a24e5fa3b23e25813754839db84078cc8c6dc611139bf531e64a"
+  "ebd66cb8cdf9bb311ccc18ed2029bca9f0c8626969ce8ce51b86f22d578ffff0"
+  "1a6a3ee5633fd8ca5094bc887d73f2c58a41f3e2ff82288ff00b8d0d81f86ab7"
+  "c4f97295a2ab421bd57b88c873217a0f8c3d64e7f67ef9469a6c561ee1856cb9"
+  "892528025ae48159153ab6cf427fc8a5c1cc5eebf5cfb90fdc804425132424a0"
+  "a40a6c1169a35f7493afda7534bc79cbab46d33cf5dca870b45d8be843ed81cb"
+)
+
+prepare() {
+  cd "${srcdir}/${_pkgfn}"
+  patch -Np1 -i "${srcdir}/003-adjust-qmake-conf-mingw.patch"
+  patch -Np1 -i "${srcdir}/004-qt-6.2.0-win32-g-Add-QMAKE_EXTENSION_IMPORTLIB-defaulting-to-.patch"
+  patch -Np1 -i "${srcdir}/006-qt-6.2.0-dont-add-resource-files-to-qmake-libs.patch"
+  patch -Np1 -i "${srcdir}/009-qfileinfo-undefine-mingw-stat.patch"
+}
+
+build() {
+  PKG_CONFIG_ARGN="--static" \
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DQT_GENERATE_SBOM=OFF \
+    -DQT_QMAKE_TARGET_MKSPEC=win32-clang-g++ \
+    -DINSTALL_ARCHDATADIR=share/qt6 \
+    -DINSTALL_DATADIR=share/qt6 \
+    -DINSTALL_DESCRIPTIONSDIR=share/qt6/modules \
+    -DINSTALL_INCLUDEDIR=include/qt6 \
+    -DINSTALL_MKSPECSDIR=share/qt6/mkspecs \
+    -DFEATURE_androiddeployqt=OFF \
+    -DFEATURE_cpp_winrt=ON \
+    -DFEATURE_cssparser=OFF \
+    -DFEATURE_cxx20=ON \
+    -DFEATURE_dbus=OFF \
+    -DFEATURE_freetype=OFF \
+    -DFEATURE_harfbuzz=OFF \
+    -DFEATURE_network=OFF \
+    -DFEATURE_openssl_hash=ON \
+    -DFEATURE_pkg_config=ON \
+    -DFEATURE_printsupport=OFF \
+    -DFEATURE_relocatable=ON \
+    -DFEATURE_sql_odbc=OFF \
+    -DFEATURE_sql_sqlite=ON \
+    -DFEATURE_system_sqlite=ON \
+    -DFEATURE_testlib=OFF \
+    -DFEATURE_texthtmlparser=OFF \
+    -DFEATURE_textmarkdownreader=OFF \
+    -DFEATURE_textmarkdownwriter=OFF \
+    -DFEATURE_textodfwriter=OFF \
+    -DFEATURE_widgets=OFF \
+    -DFEATURE_windeployqt=OFF \
+    -DINPUT_freetype=no \
+    -DINPUT_harfbuzz=no \
+    -DINPUT_libjpeg=system \
+    -DINPUT_libmd4c=no \
+    -DINPUT_libpng=system \
+    -DINPUT_opengl=no \
+    -DINPUT_openssl=linked \
+    -DPCRE2_USE_STATIC_LIBS=ON \
+    -S "${srcdir}/${_pkgfn}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  PATH="${srcdir}/build-${MSYSTEM}/bin:${PATH}" \
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share/qt6/doc"
+  local PREFIX_WIN="$(cygpath -m "${MINGW_PREFIX}")"
+  find "${pkgdir}${MINGW_PREFIX}/bin" -type f \( -name '*.bat' \) \
+      -exec sed -i -e "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" {} \;
+  find "${pkgdir}${MINGW_PREFIX}/lib/cmake" -type f \( -name '*.cmake' \) \
+      -exec sed -i -e "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" {} \;
+  find "${pkgdir}${MINGW_PREFIX}/share/qt6" -type f \( -name '*.pri' -o -name '*.bat' \) \
+      -exec sed -i -e "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" {} \;
+  mkdir -p "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig"
+  # Create .pc files manually because the project doesn't produce them for
+  # static builds, and meson's qmake-based discovery method doesn't link
+  # transitive dependencies
+  for module in Concurrent Core Gui Sql Xml
+  do
+    sed "s|MINGW_PREFIX|${MINGW_PREFIX}|;s|PKGVER|${pkgver}|" "${srcdir}/Qt6${module}.pc.in" > "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/Qt6${module}.pc"
+  done
+}

@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickEffects
+Description: Qt QuickEffects module
+Version: PKGVER
+Requires: Qt6Core Qt6Gui Qt6Qml Qt6Quick
+Libs: -L${libdir} -lQt6QuickEffects
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Effects -leffectsplugin
+Cflags: -I${includedir}/QtQuickEffects -I${includedir} -DQT_QUICKEFFECTS_LIB

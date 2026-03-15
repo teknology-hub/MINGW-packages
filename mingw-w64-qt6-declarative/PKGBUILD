@@ -1,0 +1,141 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream contributor: Mehdi Chinoune <mehdi.chinoune@hotmail.com>
+# Upstream contributor: Gary Wang <opensource@blumia.net>
+
+_realname="qt6-declarative"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="Classes for QML and JavaScript languages (mingw-w64)"
+pkgver=6.10.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://www.qt.io"
+msys2_references=(
+  "archlinux: qt6-declarative"
+  "cpe: cpe:/a:qt:qt"
+)
+msys2_repository_url="https://code.qt.io/cgit/qt/qtdeclarative.git"
+license=("spdx:LGPL-3.0-only WITH Qt-GPL-exception-1.0 AND BSD-3-Clause AND GFDL-1.3-no-invariants-only AND GPL-2.0-only AND GPL-3.0-only")
+groups=("${MINGW_PACKAGE_PREFIX}-qt6")
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-qt6-base"
+  "${MINGW_PACKAGE_PREFIX}-qt6-svg"
+)
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+  "${MINGW_PACKAGE_PREFIX}-qt6-shadertools"
+)
+_pkgfn="${_realname/6-/}-everywhere-src-${pkgver}"
+# download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use Yandex mirror instead
+source=(
+  "https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz"
+  "Qt6Qml.pc.in"
+  "Qt6QmlCompiler.pc.in"
+  "Qt6QmlCore.pc.in"
+  "Qt6QmlIntegration.pc.in"
+  "Qt6QmlLocalStorage.pc.in"
+  "Qt6QmlMeta.pc.in"
+  "Qt6QmlModels.pc.in"
+  "Qt6QmlWorkerScript.pc.in"
+  "Qt6QmlXmlListModel.pc.in"
+  "Qt6Quick.pc.in"
+  "Qt6QuickControls2.pc.in"
+  "Qt6QuickControls2Basic.pc.in"
+  "Qt6QuickControls2BasicStyleImpl.pc.in"
+  "Qt6QuickControls2FluentWinUI3StyleImpl.pc.in"
+  "Qt6QuickControls2Fusion.pc.in"
+  "Qt6QuickControls2FusionStyleImpl.pc.in"
+  "Qt6QuickControls2Imagine.pc.in"
+  "Qt6QuickControls2ImagineStyleImpl.pc.in"
+  "Qt6QuickControls2Impl.pc.in"
+  "Qt6QuickControls2Material.pc.in"
+  "Qt6QuickControls2MaterialStyleImpl.pc.in"
+  "Qt6QuickControls2Universal.pc.in"
+  "Qt6QuickControls2UniversalStyleImpl.pc.in"
+  "Qt6QuickDialogs2.pc.in"
+  "Qt6QuickDialogs2QuickImpl.pc.in"
+  "Qt6QuickDialogs2Utils.pc.in"
+  "Qt6QuickEffects.pc.in"
+  "Qt6QuickLayouts.pc.in"
+  "Qt6QuickTemplates2.pc.in"
+  "Qt6QuickVectorImage.pc.in"
+  "Qt6QuickVectorImageHelpers.pc.in"
+)
+sha256sums=(
+  "a249914ff66cdcdbf0df8b5ffad997a2ee6dce01cc17d43c6cc56fdc1d0f4b0f"
+  "fd9845d7a66c93818088dedd4119ffd31130d0ccef28ab57c7557a8c0af4f583"
+  "705edaebb8a25906c22aec504d6b125af44c914c50fc2fb7ebdaf0071f637794"
+  "5391baf695fb41d397a0dc12816c3d7a51567abf73cbd965e127dd1642056c9d"
+  "ff0c827b96af854b05c3e382d6312d88e091cd775ae4976f6ab9aef4d7fd10bb"
+  "8cc50481775e25385c0d418554c77ee4df86fb2e1cd061fd55dcaff508488743"
+  "846ab1b22d04802fa9b9000fcb967f282461e400661766e60fbe4dd32f3605e8"
+  "2c65aedfc81fa84d0252b5104fc73b6370b9aeca4bfd70c5fb3c4ee921c29fec"
+  "709844eaf52ad58ab4f0bdd1c84c6b358a701b43cc708174ab5fcc5d0c1635b0"
+  "df5642c1c5d9fc08452abcfb8d9fa54bb67705f70ddba50fd75b1ba404d3d8c3"
+  "c04c54f47f7af608c4e435d05eca5593a51b4efd11ea70502a367a6ac03881a0"
+  "ec2d2b88adb7cde5ebb850a1dc5fe43f041e6556901a62b4b24933d888b41c1b"
+  "b9ce6e34e1a37dc3e10ab90ad1dfee0695fc3e5df0439b723f32454782d3f346"
+  "d85f8b4fd30edb527fdd9a799b0ebcd5e80725362e66c7b28702b00fcdd91839"
+  "09aea25879c0e59d0e9af0ce22496ab44aa0d2d251c420c7b399e8dcd9c981cd"
+  "554d4648f5e0e00bf722afecacae2dfea61a262915c01372d3d9d4577e0b9cd9"
+  "d1c4ddb08a055dd4ced6eec4e965886582e643913bf52b63b8d45c856247b56a"
+  "462c59f2e935c07ed12fa62d894422cede9939dbf899ddaa9d635dc397192d5a"
+  "94504430ac7e56f6ded4700c04fee16077a84cf814853821ba8865a7ede9e177"
+  "456ad1776e77d65fbe1f61947505bc6038f6a32f9d55e938b1e35df6ecffb650"
+  "eefb8a8cb36abbc3c89111a60ae966c029331be0ac1c4296cb9fed690d076e43"
+  "ac879a204ffabc8dfd2a1f07ce1f0294d92b34f29a0ac761ec073d2e2eeb50c7"
+  "df582c9b82bba2ecd5f0bc80e647834caff3797ddbfeeb52732913499b7dd749"
+  "2fa98576e439525fed0a70ec919f94358e7290570a091f4792a46badc9c1d9bf"
+  "45798075c8b6deafa4a4243cde426ce6d902c4d9159910914fc28e7c6f4229f7"
+  "ed44e65a98126434176e38c331a284c754d45e1fcb46585d6faae6cbffa6331b"
+  "8e8c3d59e7c8e2bafbb3bf9437371a52fb081203751dbf5b030c2c8083eee331"
+  "f11196313fce6343c7646415b6605447dbf3beaddbb7500190898fc94a14cee6"
+  "6f01e8cbf47daf175aef0f1d1f44515930ceecb81356c198033c93d2c1371a9c"
+  "4d41a5bdab830159ac6c8398d78bb224859fee29bba1eda4d8346dfbad2afd5b"
+  "95906c26c9650ea966bdd26ac941383892b6a3d3907d80cf07e576143ab3d010"
+  "e4b36074bcbc7597b4951c7364493f98ca008514fc2eb51faad1ab114999225a"
+)
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DPython_EXECUTABLE="${MINGW_PREFIX}/bin/python" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DQT_GENERATE_SBOM=OFF \
+    -DFEATURE_qml_profiler=OFF \
+    -DFEATURE_quick_designer=OFF \
+    -S "${srcdir}/${_pkgfn}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  local PREFIX_WIN="$(cygpath -m "${MINGW_PREFIX}")"
+  find "${pkgdir}${MINGW_PREFIX}/lib/cmake" -type f \( -name '*.cmake' \) \
+      -exec sed -i -e "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" {} \;
+  find "${pkgdir}${MINGW_PREFIX}/share/qt6" -type f \( -name '*.pri' \) \
+      -exec sed -i -e "s|${PREFIX_WIN}|${MINGW_PREFIX}|g" {} \;
+  mkdir -p "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig"
+  # Create .pc files manually because the project doesn't produce them for
+  # static builds, and meson's qmake-based discovery method doesn't link
+  # transitive dependencies
+  for module in Qml QmlCompiler QmlCore QmlIntegration QmlLocalStorage QmlMeta \
+    QmlModels QmlWorkerScript QmlXmlListModel Quick QuickControls2 \
+    QuickControls2Basic QuickControls2BasicStyleImpl \
+    QuickControls2FluentWinUI3StyleImpl QuickControls2Fusion \
+    QuickControls2FusionStyleImpl QuickControls2Imagine \
+    QuickControls2ImagineStyleImpl QuickControls2Impl QuickControls2Material \
+    QuickControls2MaterialStyleImpl QuickControls2Universal \
+    QuickControls2UniversalStyleImpl QuickDialogs2 QuickDialogs2QuickImpl \
+    QuickDialogs2Utils QuickEffects QuickLayouts QuickTemplates2 \
+    QuickVectorImage QuickVectorImageHelpers
+  do
+    sed "s|MINGW_PREFIX|${MINGW_PREFIX}|;s|PKGVER|${pkgver}|" "${srcdir}/Qt6${module}.pc.in" > "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/Qt6${module}.pc"
+  done
+}

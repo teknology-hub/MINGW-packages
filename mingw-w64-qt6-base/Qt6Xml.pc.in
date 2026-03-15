@@ -1,0 +1,10 @@
+prefix=MINGW_PREFIX
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 Xml
+Description: Qt Xml module
+Version: PKGVER
+Requires: Qt6Core
+Libs: -L${libdir} -lQt6Xml
+Cflags: -I${includedir}/QtXml -I${includedir} -DQT_XML_LIB

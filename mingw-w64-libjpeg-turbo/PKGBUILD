@@ -1,0 +1,57 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+# Upstream maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Upstream contributor: Renato Silva <br.renatosilva@gmail.com>
+
+_realname="libjpeg-turbo"
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgdesc="JPEG image codec with accelerated baseline compression and decompression (mingw-w64)"
+pkgver=3.1.3
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://libjpeg-turbo.virtualgl.org/"
+msys2_pgp_keys_url="https://libjpeg-turbo.org/Downloads/DigitalSignatures"
+msys2_references=(
+  "cpe: cpe:/a:d.r.commander:libjpeg-turbo"
+  "cpe: cpe:/a:libjpeg-turbo:libjpeg-turbo"
+)
+msys2_repository_url="https://github.com/libjpeg-turbo/libjpeg-turbo"
+license=("custom:'BSD-like'")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+  "${MINGW_PACKAGE_PREFIX}-nasm"
+)
+source=(
+  "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/${pkgver}/${_realname}-${pkgver}.tar.gz"{,.sig}
+  "0001-header-compat.mingw.patch"
+)
+sha256sums=(
+  "075920b826834ac4ddf97661cc73491047855859affd671d52079c6867c1c6c0"
+  "SKIP"
+  "f0609ad801831a549cbc15eeee5ab45fb9df344e607491f6f1ad762519d50089"
+)
+validpgpkeys=("0338C8D8D9FDA62CF9C421BD7EC2DBB6F4DBF434")
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/0001-header-compat.mingw.patch"
+}
+
+build() {
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+  "${MINGW_PREFIX}/bin/cmake" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DWITH_JPEG8=ON \
+    -DWITH_TOOLS=OFF \
+    -S "${srcdir}/${_realname}-${pkgver}" \
+    -B "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
+}
+
+package() {
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
+  rm -r "${pkgdir}${MINGW_PREFIX}/share"
+}

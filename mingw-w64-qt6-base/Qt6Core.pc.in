@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 Core
+Description: Qt Core module
+Version: PKGVER
+Requires.private: double-conversion,libb2,libcrypto,libpcre2-16,libzstd,zlib
+Libs: -L${libdir} -lQt6Core
+Libs.private: -lauthz -lmincore -lnetapi32 -lntdll -lsynchronization -luserenv -lversion -lwinmm
+Cflags: -I${includedir}/QtCore -I${includedir} -DQT_CORE_LIB

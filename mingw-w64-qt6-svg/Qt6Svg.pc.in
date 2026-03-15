@@ -1,0 +1,11 @@
+prefix=MINGW_PREFIX
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 Svg
+Description: Qt Svg module
+Version: PKGVER
+Requires: Qt6Core Qt6Gui
+Libs: -L${libdir} -lQt6Svg
+Libs.private: -L${prefix}/share/qt6/plugins/iconengines -lqsvg
+Cflags: -I${includedir}/QtSvg -I${includedir} -DQT_SVG_LIB

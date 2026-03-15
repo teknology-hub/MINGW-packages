@@ -1,0 +1,13 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QmlCompiler
+Description: Qt QmlCompiler module
+Version: PKGVER
+Requires: Qt6Core Qt6Qml
+Libs: -L${libdir} -lQt6QmlCompiler
+Cflags: -I${includedir}/QtQmlCompiler -I${includedir} -DQT_QMLCOMPILER_LIB

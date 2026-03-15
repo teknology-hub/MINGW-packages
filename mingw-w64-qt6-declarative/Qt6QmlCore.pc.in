@@ -1,0 +1,14 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QmlCore
+Description: Qt QmlCore module
+Version: PKGVER
+Requires: Qt6Core Qt6Qml
+Libs: -L${libdir} -lQt6QmlCore
+Libs.private: -L${prefix}/share/qt6/qml/QtCore -lqtqmlcoreplugin
+Cflags: -I${includedir}/QtQmlCore -I${includedir} -DQT_QMLCORE_LIB

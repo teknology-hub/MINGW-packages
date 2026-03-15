@@ -1,0 +1,13 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QmlMeta
+Description: Qt QmlMeta module
+Version: PKGVER
+Requires: Qt6Qml Qt6QmlModels Qt6QmlWorkerScript
+Libs: -L${libdir} -lQt6QmlMeta
+Cflags: -I${includedir}/QtQmlMeta -I${includedir} -DQT_QMLMETA_LIB

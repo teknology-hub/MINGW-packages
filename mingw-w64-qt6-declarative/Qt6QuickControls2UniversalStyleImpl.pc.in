@@ -1,0 +1,13 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickControls2UniversalStyleImpl
+Description: Qt QuickControls2UniversalStyleImpl module
+Version: PKGVER
+Libs: -L${libdir} -lQt6QuickControls2UniversalStyleImpl
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Controls/Universal/impl -lqtquickcontrols2universalstyleimplplugin
+Cflags: -I${includedir}/QtQuickControls2UniversalStyleImpl -I${includedir} -DQT_QUICKCONTROLS2UNIVERSALSTYLEIMPL_LIB

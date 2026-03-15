@@ -1,0 +1,13 @@
+prefix=MINGW_PREFIX
+exec_prefix=${prefix}
+bindir=${prefix}/bin
+libexecdir=${prefix}/share/qt6/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include/qt6
+
+Name: Qt6 QuickControls2ImagineStyleImpl
+Description: Qt QuickControls2ImagineStyleImpl module
+Version: PKGVER
+Libs: -L${libdir} -lQt6QuickControls2ImagineStyleImpl
+Libs.private: -L${prefix}/share/qt6/qml/QtQuick/Controls/Imagine/impl -lqtquickcontrols2imaginestyleimplplugin
+Cflags: -I${includedir}/QtQuickControls2ImagineStyleImpl -I${includedir} -DQT_QUICKCONTROLS2IMAGINESTYLEIMPL_LIB
