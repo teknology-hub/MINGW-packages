@@ -7,7 +7,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Classes for QML and JavaScript languages (mingw-w64)"
 pkgver=6.10.2
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.qt.io"
@@ -30,7 +30,7 @@ makedepends=(
 _pkgfn="${_realname/6-/}-everywhere-src-${pkgver}"
 # download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use Yandex mirror instead
 source=(
-  "https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz"
+  "https://mirror.yandex.ru/mirrors/qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfn}.tar.xz"
   "Qt6Qml.pc.in"
   "Qt6QmlCompiler.pc.in"
   "Qt6QmlCore.pc.in"
@@ -75,7 +75,7 @@ sha256sums=(
   "709844eaf52ad58ab4f0bdd1c84c6b358a701b43cc708174ab5fcc5d0c1635b0"
   "df5642c1c5d9fc08452abcfb8d9fa54bb67705f70ddba50fd75b1ba404d3d8c3"
   "c04c54f47f7af608c4e435d05eca5593a51b4efd11ea70502a367a6ac03881a0"
-  "ec2d2b88adb7cde5ebb850a1dc5fe43f041e6556901a62b4b24933d888b41c1b"
+  "43794d89398a0588d51e5b2dca6d8cdedb1701937bcbb77522b319a7a522420c"
   "b9ce6e34e1a37dc3e10ab90ad1dfee0695fc3e5df0439b723f32454782d3f346"
   "d85f8b4fd30edb527fdd9a799b0ebcd5e80725362e66c7b28702b00fcdd91839"
   "09aea25879c0e59d0e9af0ce22496ab44aa0d2d251c420c7b399e8dcd9c981cd"
