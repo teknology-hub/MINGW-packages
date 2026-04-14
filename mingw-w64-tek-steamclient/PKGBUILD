@@ -8,7 +8,7 @@ pkgname=(
 )
 pkgdesc="An open-source partial Steam client implementation"
 pkgver=2.1.3
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/teknology-hub/tek-steamclient"

@@ -11,5 +11,5 @@ Version: PKGVER
 Requires: Qt6Core Qt6Gui Qt6Qml
 Requires.private: Qt6QmlMeta Qt6QmlModels
 Libs: -L${libdir} -lQt6Quick
-Libs.private: -L${libdir} -lQt6QmlLocalStorage -L${prefix}/share/qt6/qml/QtQuick -lqtquick2plugin -L${prefix}/share/qt6/qml/QtQuick/LocalStorage -lqmllocalstorageplugin -L${prefix}/share/qt6/qml/QtQuick/NativeStyle -lqtquickcontrols2nativestyleplugin -L${prefix}/share/qt6/qml/QtQuick/Particles -lparticlesplugin -L${prefix}/share/qt6/qml/QtQuick/Shapes -lqmlshapesplugin -L${prefix}/share/qt6/qml/QtQuick/Window -lquickwindowplugin
+Libs.private: -L${libdir} -lQt6QmlLocalStorage -L${prefix}/share/qt6/qml/QtQuick -lqtquick2plugin -L${prefix}/share/qt6/qml/QtQuick/LocalStorage -lqmllocalstorageplugin -L${prefix}/share/qt6/qml/QtQuick/NativeStyle -lqtquickcontrols2nativestyleplugin -L${prefix}/share/qt6/qml/QtQuick/Particles -lparticlesplugin -L${prefix}/share/qt6/qml/QtQuick/Window -lquickwindowplugin
 Cflags: -I${includedir}/QtQuick -I${includedir} -DQT_QUICK_LIB

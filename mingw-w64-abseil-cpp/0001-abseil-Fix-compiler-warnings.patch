@@ -51,23 +51,3 @@
  
  #elif defined(__Fuchsia__)
  #include <zircon/syscalls.h>
---- a/absl/time/internal/cctz/src/time_zone_format.cc
-+++ b/absl/time/internal/cctz/src/time_zone_format.cc
-@@ -40,7 +40,7 @@
- #include <limits>
- #include <string>
- #include <vector>
--#if !HAS_STRPTIME
-+#ifndef HAS_STRPTIME
- #include <iomanip>
- #include <sstream>
- #endif
-@@ -56,7 +56,7 @@
- 
- namespace {
- 
--#if !HAS_STRPTIME
-+#ifndef HAS_STRPTIME
- // Build a strptime() using C++11's std::get_time().
- char* strptime(const char* s, const char* fmt, std::tm* tm) {
-   std::istringstream input(s);

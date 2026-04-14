@@ -5,7 +5,7 @@ _realname="libarchive"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Multi-format archive and compression library (mingw-w64)"
-pkgver=3.8.5
+pkgver=3.8.7
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -25,6 +25,7 @@ depends=(
   "${MINGW_PACKAGE_PREFIX}-libiconv"
   "${MINGW_PACKAGE_PREFIX}-lz4"
   "${MINGW_PACKAGE_PREFIX}-openssl"
+  "${MINGW_PACKAGE_PREFIX}-pcre2"
   "${MINGW_PACKAGE_PREFIX}-xz"
   "${MINGW_PACKAGE_PREFIX}-zlib"
   "${MINGW_PACKAGE_PREFIX}-zstd"
@@ -35,16 +36,16 @@ makedepends=(
 )
 source=(
   "https://github.com/libarchive/libarchive/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"
-  "0001-static-lib-name.patch"
+  "001-fix-static-library-output-name-on-mingw.patch"
 )
 sha256sums=(
-  "d68068e74beee3a0ec0dd04aee9037d5757fcc651591a6dcf1b6d542fb15a703"
-  "5ae64aff138555007b77b9d0caa107fc1417f72715820edae870f9883fb3d28f"
+  "d3a8ba457ae25c27c84fd2830a2efdcc5b1d40bf585d4eb0d35f47e99e5d4774"
+  "4331c43882b4dad45f6036ee5e81671e0b54bdacbea48a64597282fd3d1bfb85"
 )
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
-  patch -Np1 -i "${srcdir}/0001-static-lib-name.patch"
+  patch -Np1 -i "${srcdir}/001-fix-static-library-output-name-on-mingw.patch"
 }
 
 build() {
@@ -52,17 +53,14 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DENABLE_CAT_SHARED=ON \
     -DENABLE_CPIO_SHARED=ON \
-    -DENABLE_LIBGCC=OFF \
     -DENABLE_LIBXML2=OFF \
-    -DENABLE_PCREPOSIX=OFF \
-    -DENABLE_PCRE2POSIX=OFF \
     -DENABLE_TAR_SHARED=ON \
     -DENABLE_TEST=OFF \
     -DENABLE_UNZIP_SHARED=ON \
     -DENABLE_WIN32_XMLLITE=OFF \
-    -DPOSIX_REGEX_LIB="" \
     -S "${srcdir}/${_realname}-${pkgver}" \
     -B "${srcdir}/build-${MSYSTEM}"
   "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"

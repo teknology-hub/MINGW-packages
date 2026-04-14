@@ -10,7 +10,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}-tools"
 )
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.gnu.org/software/gettext/"

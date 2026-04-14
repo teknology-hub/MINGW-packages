@@ -5,7 +5,7 @@ _realname="abseil-cpp"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Abseil Common Libraries (C++) from Google (mingw-w64)"
-pkgver=20250814.1
+pkgver=20260107.1
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -28,8 +28,8 @@ source=(
   "0003-fix-linking-abseil_dll.patch"
 )
 sha256sums=(
-  "1692f77d1739bacf3f94337188b78583cf09bab7e420d2dc6c5605a4f86785a1"
-  "30fb7526d1c89f722dd0ce0c467e034370140fbf07a1ad4f91df301c7f442551"
+  "4314e2a7cbac89cac25a2f2322870f343d81579756ceff7f431803c2c9090195"
+  "5b7e08e9b74235cd483a6ba52c2cabac84b3f21bfc107b4df1cca13c0cb9c47a"
   "8946282db6a225b385729deb345b57e3ee75f4e859dbbc49ab7bc5604d71192f"
   "67ee0328f1aa8e3ad24231b2e6ef6a78963218e087cc6a7230e2d4e61b27a741"
 )
@@ -46,6 +46,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release
     -DCMAKE_CXX_STANDARD=23
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     -DABSL_PROPAGATE_CXX_STD=ON
     -S "${srcdir}/${_realname}-${pkgver}"
   )

@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="HTTP/3 library written in C (mingw-w64)"
 pkgver=1.15.0
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://nghttp2.org/nghttp3/"
@@ -43,6 +43,7 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DBUILD_TESTING=OFF \
     -DENABLE_LIB_ONLY=ON \
     -S "${srcdir}/${_realname}-${pkgver}" \

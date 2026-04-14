@@ -1,0 +1,39 @@
+diff --git a/main.mk b/main.mk
+index e5a81f2..3dd3699 100755
+--- a/main.mk
++++ b/main.mk
+@@ -168,6 +168,8 @@ LDFLAGS.rpath ?= -Wl,-rpath -Wl,$(prefix)/lib
+ LDFLAGS.pthread ?= -lpthread
+ LDFLAGS.dlopen ?= -ldl
+ LDFLAGS.shlib ?= -shared
++LDFLAGS.link ?= -mconsole -municode
++LDFLAGS.win ?= -mwindows
+ LDFLAGS.rt ?= # nanosleep on some platforms
+ LDFLAGS.icu ?= # -licui18n -licuuc -licudata
+ CFLAGS.icu ?=
+@@ -1429,14 +1431,14 @@ STATIC_TCLSQLITE3 ?= 0
+ #
+ # tclsqlite3.(deps|flags).N = N is $(STATIC_TCLSQLITE3)
+ #
+-tclsqlite3.deps.1 = sqlite3.o
++tclsqlite3.deps.1 = sqlite3.o $(libsqlite3.LIB)
+ tclsqlite3.flags.1 = -static $(tclsqlite3.deps.1)
+ tclsqlite3.deps.0 = $(libsqlite3.DLL)
+ tclsqlite3.flags.0 = $(tclsqlite3.deps.0)
+ tclsqlite3$(T.exe):	$(T.tcl.env.sh) tclsqlite-shell.o $(tclsqlite3.deps.$(STATIC_TCLSQLITE3))
+ 	$(T.link.tcl) -o $@ tclsqlite-shell.o \
+ 		$(tclsqlite3.flags.$(STATIC_TCLSQLITE3)) $$TCL_INCLUDE_SPEC $$TCL_LIB_SPEC \
+-		$(LDFLAGS.libsqlite3)
++		$(LDFLAGS.libsqlite3) $(LDFLAGS.win)
+ tclsqlite3$(T.exe)-1: tclsqlite3$(T.exe)
+ tclsqlite3$(T.exe)-0:
+ tcl: tclsqlite3$(T.exe)-$(HAVE_TCL)
+@@ -1492,7 +1494,7 @@ all: lib
+ # Dynamic libsqlite3
+ #
+ $(libsqlite3.DLL):	$(LIBOBJ)
+-	$(T.link.shared) -o $@ $(LIBOBJ) $(LDFLAGS.libsqlite3) \
++	$(T.link.shared) -o $@ $(LIBOBJ) $(LDFLAGS.libsqlite3) $(LDFLAGS.link) \
+ 		$(LDFLAGS.libsqlite3.os-specific) $(LDFLAGS.libsqlite3.soname)
+ $(libsqlite3.DLL)-1: $(libsqlite3.DLL)
+ $(libsqlite3.DLL)-0 $(libsqlite3.DLL)-:

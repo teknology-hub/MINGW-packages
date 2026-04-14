@@ -22,7 +22,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-llvm-libs"
 )
 pkgdesc="C language family frontend for LLVM (mingw-w64)"
-pkgver=21.1.8
+pkgver=22.1.3
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -41,36 +41,14 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-pkgconf"
   "${MINGW_PACKAGE_PREFIX}-python"
 )
-_url="https://github.com/llvm/llvm-project/releases/download/llvmorg-${pkgver}"
 source=(
-  "${_url}/clang-${pkgver}.src.tar.xz"{,.sig}
-  "${_url}/clang-tools-extra-${pkgver}.src.tar.xz"{,.sig}
-  "${_url}/cmake-${pkgver}.src.tar.xz"{,.sig}
-  "${_url}/compiler-rt-${pkgver}.src.tar.xz"{,.sig}
-  "${_url}/lld-${pkgver}.src.tar.xz"{,.sig}
-  "${_url}/llvm-${pkgver}.src.tar.xz"{,.sig}
-  "${_url}/runtimes-${pkgver}.src.tar.xz"{,.sig}
-  "${_url}/third-party-${pkgver}.src.tar.xz"{,.sig}
+  "https://github.com/llvm/llvm-project/releases/download/llvmorg-${pkgver}/llvm-project-${pkgver}.src.tar.xz"{,.sig}
   "0001-Fix-GetHostTriple-for-mingw-w64-in-msys.patch"
   "0002-Fix-Findzstd-on-MINGW.patch"
   "0303-ignore-new-bfd-options.patch"
 )
 sha256sums=(
-  "6090e3f23720d003cdd84483a47d0eec6d01adbb5e0c714ac0c8b58de546aa62"
-  "SKIP"
-  "6ddb7e731bf09ab821132e2e8a3c706b6d9c52c92a9ce9a9ed0976a9c6c28829"
-  "SKIP"
-  "85735f20fd8c81ecb0a09abb0c267018475420e93b65050cc5b7634eab744de9"
-  "SKIP"
-  "dd54ae21aee1780fac59445b51ebff601ad016b31ac3a7de3b21126fd3ccb229"
-  "SKIP"
-  "d9524c5ee952500a2af92c27042a0d90ab089962af47816d4c85d0ebf76373d1"
-  "SKIP"
-  "d9022ddadb40a15015f6b27e6549a7144704ded8828ba036ffe4b8165707de21"
-  "SKIP"
-  "b6989d35cdfc1acee4af1d110fb8887f76831eb93e1df6ff7365004048742db8"
-  "SKIP"
-  "7fe99424384aea529ffaeec9cc9dfb8b451fd1852c03fc109e426fe208a1f1a7"
+  "2488c33a959eafba1c44f253e5bbe7ac958eb53fa626298a3a5f4b87373767cd"
   "SKIP"
   "eb03df53671df6627768141b3aaa76abe176a14e5e47911c97bec544387c4aff"
   "d77d47e37e4948f5c01ae8bc05fb4e879b6516132c5a60c7bc820c9cbbb39668"
@@ -83,21 +61,14 @@ validpgpkeys=(
   "FFB3368980F3E6BB5737145A316C56D064CACBA5" # Douglas Yung
   "D574BD5D1D0E98895E3BF90044F2485E45D59042" # Tobias Hieta
 )
-noextract=(
-  "clang-${pkgver}.src.tar.xz"
-  "llvm-${pkgver}.src.tar.xz"
-)
+noextract=("llvm-project-${pkgver}.src.tar.xz")
 
 prepare() {
-  tar -xf "${srcdir}"/clang-${pkgver}.src.tar.xz -C "${srcdir}" || true
-  tar -xf "${srcdir}"/llvm-${pkgver}.src.tar.xz -C "${srcdir}" || true
-  for pkg in clang clang-tools-extra cmake compiler-rt lld llvm runtimes third-party; do
-    mv "${srcdir}/${pkg}-${pkgver}.src" "${srcdir}/${pkg}"
-  done
-  cd "${srcdir}/llvm"
+  tar -xf "${srcdir}/llvm-project-${pkgver}.src.tar.xz" -C "${srcdir}" || true
+  cd "${srcdir}/llvm-project-${pkgver}.src/llvm"
   patch -Np1 -i "${srcdir}/0001-Fix-GetHostTriple-for-mingw-w64-in-msys.patch"
   patch -Np1 -i "${srcdir}/0002-Fix-Findzstd-on-MINGW.patch"
-  cd "${srcdir}/lld"
+  cd "${srcdir}/llvm-project-${pkgver}.src/lld"
   patch -Np1 -i "${srcdir}/0303-ignore-new-bfd-options.patch"
 }
 
@@ -107,13 +78,13 @@ build() {
   local _common_config=(
     -DCMAKE_BUILD_TYPE=Release
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib
     -DPython3_EXECUTABLE="${MINGW_PREFIX}/bin/python"
     -DCLANG_DEFAULT_CXX_STDLIB=libc++
     -DCLANG_DEFAULT_LINKER=lld
     -DCLANG_DEFAULT_RTLIB=compiler-rt
     -DCLANG_DEFAULT_UNWINDLIB=libunwind
-    -DCOMPILER_RT_BUILD_SANITIZERS=OFF
     -DFFI_INCLUDE_DIR="${FFI_INCLUDE_DIR}"
     -DLLVM_BUILD_LLVM_DYLIB=ON
     -DLLVM_BUILD_STATIC=OFF
@@ -130,12 +101,13 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCOMPILER_RT_BUILD_PROFILE=OFF \
     -DDEFAULT_SYSROOT="${MINGW_PREFIX}" \
+    -DCOMPILER_RT_BUILD_SANITIZERS=OFF \
     -DLLVM_BUILD_INSTRUMENTED=IR \
     -DLLVM_ENABLE_PROJECTS="clang" \
     -DLLVM_ENABLE_RUNTIMES="compiler-rt" \
     -DLLVM_TARGETS_TO_BUILD=Native \
     "${_common_config[@]}" \
-    -S "${srcdir}/llvm" \
+    -S "${srcdir}/llvm-project-${pkgver}.src/llvm" \
     -B "${srcdir}/build-${MSYSTEM}-instrument"
   "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-instrument" --target compiler-rt --target clang
   "${MINGW_PREFIX}/bin/cmake" \
@@ -144,7 +116,7 @@ build() {
     -DLLVM_ENABLE_PROJECTS="clang" \
     -DLLVM_TARGETS_TO_BUILD=Native \
     "${_common_config[@]}" \
-    -S "${srcdir}/llvm" \
+    -S "${srcdir}/llvm-project-${pkgver}.src/llvm" \
     -B "${srcdir}/build-${MSYSTEM}-train"
   rm "${srcdir}/build-${MSYSTEM}-instrument/profiles/"*.profraw || true
   "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}-train" --target clangSema
@@ -153,7 +125,9 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_SYSROOT="${MINGW_PREFIX}" \
     -DCLANG_LINKS_TO_CREATE="clang++;clang-cpp;as;c++;cc;cpp;${MINGW_CHOST}-cc;${MINGW_CHOST}-c++;${MINGW_CHOST}-clang;${MINGW_CHOST}-clang++" \
+    -DCOMPILER_RT_BUILD_SANITIZERS=OFF \
     -DCOMPILER_RT_EXCLUDE_ATOMIC_BUILTIN=OFF \
+    -DCOMPILER_RT_USE_LIBCXX=ON \
     -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON \
     -DLIBCLANG_BUILD_STATIC=ON \
     -DLLD_DEFAULT_LD_LLD_IS_MINGW=ON \
@@ -165,7 +139,7 @@ build() {
     -DLLVM_PROFDATA_FILE="${srcdir}/profdata" \
     -DLLVM_TARGETS_TO_BUILD="X86" \
     "${_common_config[@]}" \
-    -S "${srcdir}/llvm" \
+    -S "${srcdir}/llvm-project-${pkgver}.src/llvm" \
     -B "${srcdir}/build-${MSYSTEM}"
   "${MINGW_PREFIX}/bin/cmake" --build "${srcdir}/build-${MSYSTEM}"
 }
@@ -188,7 +162,7 @@ package_clang() {
   sed -i.orig '/\(extra\|scan-build\|scan-build-py\|scan-view\)\/cmake_install.cmake/d' "${srcdir}/build-${MSYSTEM}/tools/clang/tools/cmake_install.cmake"
   DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}/tools/clang"
   mkdir -p "${srcdir}/clang-libs/${MINGW_PREFIX}/bin"
-  mv -f "${pkgdir}${MINGW_PREFIX}/bin/"libclang{,-cpp}.dll "${srcdir}/clang-libs/${MINGW_PREFIX}/bin/"
+  mv -f "${pkgdir}${MINGW_PREFIX}/bin/"libclang{,-cpp}.dll "${srcdir}/clang-libs${MINGW_PREFIX}/bin/"
 }
 
 package_clang-libs() {
@@ -199,7 +173,7 @@ package_clang-libs() {
     "${MINGW_PACKAGE_PREFIX}-llvm-libs=${pkgver}"
   )
 
-  cp -r "${srcdir}/clang-libs/${MINGW_PREFIX}" "${pkgdir}${MINGW_PREFIX}"
+  cp -r "${srcdir}/clang-libs${MINGW_PREFIX}" "${pkgdir}${MINGW_PREFIX}"
 }
 
 package_clang-analyzer() {
@@ -258,8 +232,8 @@ package_llvm() {
   sed -i.orig '/compiler-rt\/cmake_install.cmake/d' "${srcdir}/build-${MSYSTEM}/projects/cmake_install.cmake"
   DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
   install -d "${pkgdir}${MINGW_PREFIX}/share/llvm/cmake/"{modules,platforms}
-  install -Dm644 "${srcdir}/llvm/cmake/modules/"*.cmake "${pkgdir}${MINGW_PREFIX}/share/llvm/cmake/modules/"
-  install -Dm644 "${srcdir}/llvm/cmake/platforms/"*.cmake "${pkgdir}${MINGW_PREFIX}/share/llvm/cmake/platforms/"
+  install -Dm644 "${srcdir}/llvm-project-${pkgver}.src/llvm/cmake/modules/"*.cmake "${pkgdir}${MINGW_PREFIX}/share/llvm/cmake/modules/"
+  install -Dm644 "${srcdir}/llvm-project-${pkgver}.src/llvm/cmake/platforms/"*.cmake "${pkgdir}${MINGW_PREFIX}/share/llvm/cmake/platforms/"
   sed -e "s|$(cygpath -wm "${MINGW_PREFIX}")|${MINGW_PREFIX}|g" -i "${pkgdir}/${MINGW_PREFIX}/lib/cmake/llvm/LLVMExports.cmake"
 }
 
@@ -269,8 +243,8 @@ package_llvm-tools() {
 
   sed -i.orig '/\(clang\|lld\)\/cmake_install.cmake/d' "${srcdir}/build-${MSYSTEM}/tools/cmake_install.cmake"
   DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}/tools"
-  mkdir -p "${srcdir}/llvm-libs/${MINGW_PREFIX}/bin"
-  mv -f "${pkgdir}${MINGW_PREFIX}/bin/"lib{LLVM-*,LTO,Remarks}.dll "${srcdir}/llvm-libs/${MINGW_PREFIX}/bin/"
+  mkdir -p "${srcdir}/llvm-project-${pkgver}.src/llvm-libs/${MINGW_PREFIX}/bin"
+  mv -f "${pkgdir}${MINGW_PREFIX}/bin/"lib{LLVM-*,LTO,Remarks}.dll "${srcdir}/llvm-project-${pkgver}.src/llvm-libs/${MINGW_PREFIX}/bin/"
   rm -r "${pkgdir}${MINGW_PREFIX}/include/llvm-c"
   cp "${pkgdir}${MINGW_PREFIX}/bin/llvm-cov.exe" "${pkgdir}${MINGW_PREFIX}/bin/gcov.exe"
 }
@@ -285,7 +259,7 @@ package_llvm-libs() {
     "${MINGW_PACKAGE_PREFIX}-zstd"
   )
 
-  cp -r "${srcdir}/llvm-libs/${MINGW_PREFIX}" "${pkgdir}${MINGW_PREFIX}"
+  cp -r "${srcdir}/llvm-project-${pkgver}.src/llvm-libs/${MINGW_PREFIX}" "${pkgdir}${MINGW_PREFIX}"
 }
 
 # template start; name=mingw-w64-splitpkg-wrappers; version=1.0;

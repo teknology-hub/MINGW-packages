@@ -7,9 +7,9 @@ _realname="sqlite3"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
-_amalgamationver=3510200
-pkgver=3.51.2
-pkgrel=2
+_amalgamationver=3530000
+pkgver=3.53.0
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.sqlite.org/"
@@ -26,15 +26,18 @@ makedepends=(
 )
 source=(
   "https://www.sqlite.org/2026/sqlite-src-${_amalgamationver}.zip"
+  "0003-fix-makefile-recipe.patch"
   "0004-dont-misuse-tcl-extern.patch"
 )
 sha256sums=(
-  "85110f762d5079414d99dd5d7917bc3ff7e05876e6ccbd13d8496a3817f20829"
+  "fbc30cdbfcfa42c78fe7bddd3fd37ab8995369a31d39097a5d0633296c0b6e65"
+  "c0614f28fa1da19fc934d81aff12e5511275b18e07ff27d8d8cfbad88d1b7571"
   "8dd2377afaad17fa85049be90bfc2bd757350343b3f64ff9bfbbcf3736593a34"
 )
 
 prepare() {
   cd "${srcdir}/sqlite-src-${_amalgamationver}"
+  patch -Np1 -i "${srcdir}/0003-fix-makefile-recipe.patch"
   patch -Np1 -i "${srcdir}/0004-dont-misuse-tcl-extern.patch"
 }
 
@@ -48,6 +51,7 @@ build() {
     --disable-load-extension \
     --disable-math \
     --disable-readline \
+    --disable-rpath \
     --disable-tcl \
     --out-implib \
     --with-tcl="${MINGW_PREFIX}/lib"

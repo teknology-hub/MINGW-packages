@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A library that implements Perl 5-style regular expressions (mingw-w64)"
 pkgver=10.47
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://pcre.org/"
@@ -34,8 +34,9 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DBUILD_SHARED_LIBS=ON \
-    -DPCRE2_BUILD_PCRE2_8=OFF \
+    -DPCRE2_BUILD_PCRE2_8=ON \
     -DPCRE2_BUILD_PCRE2_16=ON \
     -DPCRE2_BUILD_PCRE2_32=OFF \
     -DPCRE2_BUILD_PCRE2GREP=OFF \

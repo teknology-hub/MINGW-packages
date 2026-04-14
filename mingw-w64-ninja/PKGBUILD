@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Ninja is a small build system with a focus on speed (mingw-w64)"
 pkgver=1.13.2
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://ninja-build.org"
@@ -37,6 +37,7 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DBUILD_TESTING=OFF \
     -S "${srcdir}/${_realname}-${pkgver}" \
     -B "${srcdir}/build-${MSYSTEM}"

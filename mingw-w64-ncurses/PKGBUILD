@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="System V Release 4.0 curses emulation library (mingw-w64)"
 pkgver=6.6
-pkgrel=2
+pkgrel=3
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.gnu.org/software/ncurses/"
@@ -15,7 +15,10 @@ msys2_references=(
   "cpe: cpe:/a:ncurses_project:ncurses"
 )
 license=("spdx:MIT")
-depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-cc-libs"
+  "${MINGW_PACKAGE_PREFIX}-pcre2"
+)
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc")
 source=(
   "https://invisible-mirror.net/archives/ncurses/${_realname}-${pkgver}.tar.gz"{,.asc}
@@ -59,6 +62,7 @@ build() {
     --enable-widec \
     --with-cxx \
     --with-cxx-shared \
+    --with-pcre2 \
     --with-shared \
     --without-ada \
     --without-debug \

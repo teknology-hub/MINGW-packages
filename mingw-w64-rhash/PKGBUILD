@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Great utility for computing hash sums (mingw-w64)"
 pkgver=1.4.6
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://sourceforge.net/projects/rhash/"
@@ -27,7 +27,7 @@ validpgpkeys=("2875F6B1C2D27A4F0C8AF60B2A714497E37363AE")
 
 prepare() {
   cd "${srcdir}/RHash-${pkgver}"
-  patch -Np1 -i "${srcdir}/rhash-all-mingw.patch"
+  patch -Np1 -i "${srcdir}/rhash-mingw-install.patch"
 }
 
 build() {

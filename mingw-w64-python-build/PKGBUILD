@@ -5,8 +5,8 @@ _realname="build"
 pkgbase="mingw-w64-python-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-python-${_realname}"
 pkgdesc="A simple, correct Python build frontend (mingw-w64)"
-pkgver=1.4.0
-pkgrel=2
+pkgver=1.4.3
+pkgrel=1
 arch=("any")
 mingw_arch=("tek-x86_64")
 url="https://github.com/pypa/build"
@@ -26,7 +26,7 @@ source=(
   "0001-optional-colorama.patch"
 )
 sha256sums=(
-  "f1b91b925aa322be454f8330c6fb48b465da993d1e7e7e6fa35027ec49f3c936"
+  "5aa4231ae0e807efdf1fd0623e07366eca2ab215921345a2e38acdd5d0fa0a74"
   "b61ec061e373053e7e53e7c7525acaa9545adc01e532e2e8db16d7cc71bb365e"
 )
 

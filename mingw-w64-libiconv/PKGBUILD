@@ -6,7 +6,7 @@ _realname="libiconv"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Character encoding conversion library (mingw-w64)"
-pkgver=1.18
+pkgver=1.19
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -28,15 +28,15 @@ source=(
   "iconv.pc"
 )
 sha256sums=(
-  "3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8"
+  "88dd96a8c0464eca144fc791ae60cd31cd8ee78321e67397e25fc095c4a19aa6"
   "SKIP"
-  "2f59dcc4741a1773d1bbbcb6671247f1dcd5efa94c54079f3aab12d553f117a0"
+  "4fd970d260570727f347bc4ab97d9af885df5e5980fe55950a2b757cb7124a17"
   "89d5c0f666e50a0186cfb142ba7b77e8fe1ac4d65bdfd9ae14ae8d2f0045a87c"
   "cb2b1cca44c9b9bd11c3bd33997c10d22dff263542275324c88f34b59910ef87"
   "6b6e2393840f4dc6067587165777b1a07978f4c05247d7c1010a45ad251bbeeb"
   "56e7ec406bf42eb66b1d972f20d229f7a76ba00c38c7b4403bf348875704baae"
 )
-validpgpkeys=("9001B85AF9E1B83DF1BDA942F5BE8B267C6A406D") # "Bruno Haible (Open Source Development) <bruno@clisp.org>"
+validpgpkeys=("E0FFBD975397F77A32AB76ECB6301D9E1BBEAC08") # Bruno Haible (Free Software Development) <bruno@clisp.org>
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"

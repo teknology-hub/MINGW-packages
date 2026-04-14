@@ -5,7 +5,7 @@ _realname="qt6-base"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"
-pkgver=6.10.2
+pkgver=6.11.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -49,7 +49,7 @@ source=(
   "Qt6Xml.pc.in"
 )
 sha256sums=(
-  "aeb78d29291a2b5fd53cb55950f8f5065b4978c25fb1d77f627d695ab9adf21e"
+  "231ad85979864d914dc9568a1b71c91d6cf20d7b2021d059103bf0eb51cb755e"
   "68156b8b7717a0ce19c4b991942469171bfa048cd5c90765115a546e65669a1d"
   "ed5b61bcb367bbda459bec903d796ea45604278f577a988d602ade07ec6bf363"
   "4085a10b290b8e3d930de535cbad2ba3e643432cba433aa2b28fe664f86d38a3"
@@ -106,6 +106,7 @@ build() {
     -DFEATURE_textodfwriter=OFF \
     -DFEATURE_widgets=OFF \
     -DFEATURE_windeployqt=OFF \
+    -DFEATURE_windows_ioring=ON \
     -DINPUT_freetype=no \
     -DINPUT_harfbuzz=no \
     -DINPUT_libjpeg=system \

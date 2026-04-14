@@ -9,7 +9,7 @@ pkgname=(
 )
 pkgdesc="zlib replacement with optimizations for next generation systems (mingw-w64)"
 pkgver=2.3.3
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/zlib-ng/zlib-ng"
@@ -27,29 +27,33 @@ makedepends=(
 source=(
   "https://github.com/zlib-ng/zlib-ng/archive/refs/tags/${pkgver}/${_realname}-${pkgver}.tar.gz"
   "0001-match-existing-zlib-naming.patch"
-  "0002-fix-compat-symbol-overlap.patch"
+  "0002-separate-cmake-lib-types.patch"
+  "0003-fix-compat-symbol-overlap.patch"
 )
 sha256sums=(
   "f9c65aa9c852eb8255b636fd9f07ce1c406f061ec19a2e7d508b318ca0c907d1"
   "552965cd9a6dcad46a12429dbda491bd4693e0209cb695f41412524c2fa12f20"
+  "e2b7e954fc6d8110fcc8ee05665a421e21d0c9aeb69500b101d72e63223382f7"
   "2cc48d450c7d1e6af9984ac8c0fa4b1222f6bee6057733bd9faf8c756b1ad47e"
 )
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
   patch -Np1 -i "${srcdir}/0001-match-existing-zlib-naming.patch"
+  patch -Np1 -i "${srcdir}/0002-separate-cmake-lib-types.patch"
   # When both zlib-ng and zlib (zlib-ng-compat) are linked statically, some
   # internal implementation functions may be taken from the other library even
   # without raising multiple definition errors. As they're compiled with
   # different structure layouts, it causes crashes on runtime. Resolves this by
   # making those internal functions use PREFIX
-  patch -Np1 -i "${srcdir}/0002-fix-compat-symbol-overlap.patch"
+  patch -Np1 -i "${srcdir}/0003-fix-compat-symbol-overlap.patch"
 }
 
 build() {
   local _common_config=(
     -DCMAKE_BUILD_TYPE=Release
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}"
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     -DBUILD_TESTING=OFF
     -DWITH_GTEST=OFF
     -S "${srcdir}/${_realname}-${pkgver}"

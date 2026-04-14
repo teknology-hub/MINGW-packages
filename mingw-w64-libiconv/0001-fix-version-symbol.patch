@@ -3,7 +3,7 @@
 @@ -25,7 +25,7 @@ extern "C" {
  #endif
  
- #define _LIBICONV_VERSION 0x0112    /* version number: (major<<8) + minor */
+ #define _LIBICONV_VERSION 0x0113    /* version number: (major<<8) + minor */
 -extern @DLL_VARIABLE@ int _libiconv_version; /* Likewise */
 +#define _libiconv_version _LIBICONV_VERSION /* Likewise */
  
@@ -11,7 +11,7 @@
  }
 --- a/lib/iconv.c
 +++ b/lib/iconv.c
-@@ -660,7 +660,6 @@ const char * iconv_canonicalize (const char * name)
+@@ -677,7 +677,6 @@ const char * iconv_canonicalize (const char * name)
    return name;
  }
  

@@ -5,7 +5,7 @@ _realname="qt6-shadertools"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="APIs and tools in this module provide the producer functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenGL. (mingw-w64)"
-pkgver=6.10.2
+pkgver=6.11.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -29,7 +29,7 @@ source=(
   "Qt6ShaderTools.pc.in"
 )
 sha256sums=(
-  "18d9dbbc4f7e6e96e6ed89a9965dc032e2b58158b65156c035537826216716c9"
+  "e43cb1ae8809b2a858281ee269f98da59d0fc1bcf958ca5510c81f7ad3d2e14a"
   "6e797cc0a2cd58a49733fd1f34f6ddc11f97ac00e469f6376f1c4594b9b23be6"
 )
 

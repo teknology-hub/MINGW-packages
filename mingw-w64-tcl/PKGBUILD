@@ -7,7 +7,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="The Tcl scripting language (mingw-w64)"
 pkgver=8.6.17
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://tcl-lang.org/"
@@ -19,7 +19,8 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
 )
 source=(
-  "https://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz"
+  "https://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz" 
+  "001-itcl-entry-point.patch"
   "005-no-xc.mingw.patch"
   "007-install.mingw.patch"
   "010-win-non-x86.patch"
@@ -28,6 +29,7 @@ source=(
 )
 sha256sums=(
   "a3903371efcce8a405c5c245d029e9f6850258a60fa3761c4d58995610949b31"
+  "53b51d88c38ccff78a4cd96716ea56cd378f5e47deff0945b9735ec3ec10ab3a"
   "2b0f41f6704aa964dbfafa0a65dd5ce0ab97e82ff5cbbe2a95a2e8d644cc5550"
   "0fcd6877b8057ac0e2870e26b32b6dad7e5368a7ecae2876aef3c2ffc2570fbb"
   "bdaeb5695ffc860215df81276f347995a9f5bd8ce37f8f85ac1465cf71086ebd"
@@ -37,6 +39,7 @@ sha256sums=(
 
 prepare() {
   cd "${srcdir}/tcl${pkgver}"
+  patch -Np1 -i "${srcdir}/001-itcl-entry-point.patch"
   patch -Np1 -i "${srcdir}/005-no-xc.mingw.patch"
   patch -Np1 -i "${srcdir}/007-install.mingw.patch"
   patch -Np1 -i "${srcdir}/010-win-non-x86.patch"

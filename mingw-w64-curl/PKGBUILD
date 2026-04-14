@@ -5,7 +5,7 @@ _realname="curl"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Command line tool and library for transferring data with URLs (mingw-w64)"
-pkgver=8.18.0
+pkgver=8.19.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -39,15 +39,13 @@ source=(
   "pathtools.c"
   "pathtools.h"
   "0001-Make-cURL-relocatable.patch"
-  "0002-ca-native-default.patch"
 )
 sha256sums=(
-  "40df79166e74aa20149365e11ee4c798a46ad57c34e4f68fd13100e2c9a91946"
+  "4eb41489790d19e190d7ac7e18e82857cdd68af8f4e66b292ced562d333f11df"
   "SKIP"
   "ebf471173f5ee9c4416c10a78760cea8afaf1a4a6e653977321e8547ce7bf3c0"
   "1585ef1b61cf53a2ca27049c11d49e0834683dfda798f03547761375df482a90"
   "19d6fb795d6d9883e423f788c1deaf8cad7f759867f2513f58fb499d8fe04658"
-  "4193aab8670bc6db06ac6245fb0d4ed8c31c09b2df5b5846a6b240691682619b"
 )
 validpgpkeys=("27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2") # Daniel Stenberg
 
@@ -55,7 +53,6 @@ prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
   cp -fH "${srcdir}/pathtools."[ch] "${srcdir}/${_realname}-${pkgver}/lib/"
   patch -Np1 -i "${srcdir}/0001-Make-cURL-relocatable.patch"
-  patch -Np1 -i "${srcdir}/0002-ca-native-default.patch"
 }
 
 build() {
@@ -64,12 +61,13 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DBUILD_LIBCURL_DOCS=OFF \
     -DBUILD_MISC_DOCS=OFF \
     -DBUILD_SHARED_LIBS=ON \
     -DBUILD_STATIC_LIBS=ON \
     -DCURL_BROTLI=ON \
-    -DCURL_DISABLE_CA_SEARCH=ON \
+    -DCURL_CA_NATIVE=ON \
     -DCURL_DISABLE_COOKIES=ON \
     -DCURL_DISABLE_HTTP_AUTH=ON \
     -DCURL_DISABLE_LIBCURL_OPTION=ON \

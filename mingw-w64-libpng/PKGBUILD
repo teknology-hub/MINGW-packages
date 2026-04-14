@@ -5,7 +5,7 @@ _realname="libpng"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A collection of routines used to create PNG format graphics (mingw-w64)"
-pkgver=1.6.55
+pkgver=1.6.57
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -27,7 +27,7 @@ source=(
   "apng.patch"
 )
 sha256sums=(
-  "d925722864837ad5ae2a82070d4b2e0603dc72af44bd457c3962298258b8e82d"
+  "d10c20d7171569804cae8dfc13ba6dcd0662c41ed39d43d4d429314aafb10a80"
   "0e3aca8a0f85c2bc1225cf04af030fe07b24ed1835ce7fa03227e12dc32206d4"
 )
 validpgpkeys=("8048643BA2C840F4F92A195FF54984BFA16C640F") # Glenn Randers-Pehrson (mozilla) <glennrp+bmo@gmail.com>
@@ -42,6 +42,7 @@ build() {
   "${MINGW_PREFIX}/bin/cmake" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DPNG_TESTS=OFF \
     -DPNG_TOOLS=OFF \
     -S "${srcdir}/${_realname}-${pkgver}" \

@@ -6,8 +6,8 @@ _realname="qt6-declarative"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Classes for QML and JavaScript languages (mingw-w64)"
-pkgver=6.10.2
-pkgrel=2
+pkgver=6.11.0
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.qt.io"
@@ -59,12 +59,13 @@ source=(
   "Qt6QuickDialogs2Utils.pc.in"
   "Qt6QuickEffects.pc.in"
   "Qt6QuickLayouts.pc.in"
+  "Qt6QuickShapes.pc.in"
   "Qt6QuickTemplates2.pc.in"
   "Qt6QuickVectorImage.pc.in"
   "Qt6QuickVectorImageHelpers.pc.in"
 )
 sha256sums=(
-  "a249914ff66cdcdbf0df8b5ffad997a2ee6dce01cc17d43c6cc56fdc1d0f4b0f"
+  "4eece569431ddf8324e7d322fa27001916570b23df535f8fb28aba445eedfde9"
   "fd9845d7a66c93818088dedd4119ffd31130d0ccef28ab57c7557a8c0af4f583"
   "705edaebb8a25906c22aec504d6b125af44c914c50fc2fb7ebdaf0071f637794"
   "5391baf695fb41d397a0dc12816c3d7a51567abf73cbd965e127dd1642056c9d"
@@ -74,8 +75,8 @@ sha256sums=(
   "2c65aedfc81fa84d0252b5104fc73b6370b9aeca4bfd70c5fb3c4ee921c29fec"
   "709844eaf52ad58ab4f0bdd1c84c6b358a701b43cc708174ab5fcc5d0c1635b0"
   "df5642c1c5d9fc08452abcfb8d9fa54bb67705f70ddba50fd75b1ba404d3d8c3"
-  "c04c54f47f7af608c4e435d05eca5593a51b4efd11ea70502a367a6ac03881a0"
-  "43794d89398a0588d51e5b2dca6d8cdedb1701937bcbb77522b319a7a522420c"
+  "d45b619815ccfc1258084e44fda3d911ed7df2302b57cf2d8c3cc1c0af8c9f65"
+  "7748ba1493477637cc4c1d991de3231923e71c8f6ad2738f31c86834644966c9"
   "b9ce6e34e1a37dc3e10ab90ad1dfee0695fc3e5df0439b723f32454782d3f346"
   "d85f8b4fd30edb527fdd9a799b0ebcd5e80725362e66c7b28702b00fcdd91839"
   "09aea25879c0e59d0e9af0ce22496ab44aa0d2d251c420c7b399e8dcd9c981cd"
@@ -93,6 +94,7 @@ sha256sums=(
   "8e8c3d59e7c8e2bafbb3bf9437371a52fb081203751dbf5b030c2c8083eee331"
   "f11196313fce6343c7646415b6605447dbf3beaddbb7500190898fc94a14cee6"
   "6f01e8cbf47daf175aef0f1d1f44515930ceecb81356c198033c93d2c1371a9c"
+  "3ef12073d781e89f7881e2028330c3e455ad8ab59d12617158409d0e56ae4d40"
   "4d41a5bdab830159ac6c8398d78bb224859fee29bba1eda4d8346dfbad2afd5b"
   "95906c26c9650ea966bdd26ac941383892b6a3d3907d80cf07e576143ab3d010"
   "e4b36074bcbc7597b4951c7364493f98ca008514fc2eb51faad1ab114999225a"
@@ -133,7 +135,7 @@ package() {
     QuickControls2ImagineStyleImpl QuickControls2Impl QuickControls2Material \
     QuickControls2MaterialStyleImpl QuickControls2Universal \
     QuickControls2UniversalStyleImpl QuickDialogs2 QuickDialogs2QuickImpl \
-    QuickDialogs2Utils QuickEffects QuickLayouts QuickTemplates2 \
+    QuickDialogs2Utils QuickEffects QuickLayouts QuickShapes QuickTemplates2 \
     QuickVectorImage QuickVectorImageHelpers
   do
     sed "s|MINGW_PREFIX|${MINGW_PREFIX}|;s|PKGVER|${pkgver}|" "${srcdir}/Qt6${module}.pc.in" > "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/Qt6${module}.pc"
