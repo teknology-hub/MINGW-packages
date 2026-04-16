@@ -1,0 +1,82 @@
+# Maintainer: Nuclearist <nuclearist@teknology-hub.com>
+
+_realname="tek-injector"
+pkgbase="mingw-w64-${_realname}"
+pkgname=(
+  "${MINGW_PACKAGE_PREFIX}-${_realname}"
+  "${MINGW_PACKAGE_PREFIX}-${_realname}-dist"
+)
+pkgdesc="DLL injector for tek-game-runtime"
+pkgver=2.0.2
+pkgrel=1
+arch=("x86_64")
+mingw_arch=("tek-x86_64")
+url="https://github.com/teknology-hub/tek-injector"
+license=("GPL-3.0-or-later")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-meson"
+)
+source=("https://teknology-hub.com/software/tek-injector/releases/${pkgver}/src/${_realname}-${pkgver}.tar.zst"{,.sig})
+sha256sums=(
+  "1658bb83269b650c2f3fc8c78b10333eae3e5a31528c7d0b92b70bd517387aa4"
+  "SKIP"
+)
+validpgpkeys=("F021C4E2C06A2D2AE01688EFA5B1020268A1093A") # Nuclearist
+
+build() {
+  local _common_config=(
+    --prefix="${MINGW_PREFIX}"
+    --buildtype=debugoptimized
+    --default-library=both
+    -Db_lto=true
+    -Db_lto_mode=thin
+    -Db_ndebug=true
+  )
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+  "${MINGW_PREFIX}/bin/meson" setup \
+    "${_common_config[@]}" \
+    "${srcdir}/build-${MSYSTEM}" \
+    "${srcdir}/${_realname}-${pkgver}"
+  CXXFLAGS="${CXXFLAGS} -gcodeview" \
+  LDFLAGS="${LDFLAGS} -static -Wl,--pdb=" \
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+  "${MINGW_PREFIX}/bin/meson" setup \
+    --default-both-libraries=static \
+    "${_common_config[@]}" \
+    "${srcdir}/build-${MSYSTEM}-dist" \
+    "${srcdir}/${_realname}-${pkgver}"
+  "${MINGW_PREFIX}/bin/meson" compile -C "${srcdir}/build-${MSYSTEM}"
+  "${MINGW_PREFIX}/bin/meson" compile -C "${srcdir}/build-${MSYSTEM}-dist"
+}
+
+package_tek-injector() {
+  "${MINGW_PREFIX}/bin/meson" install -C "${srcdir}/build-${MSYSTEM}" --destdir "${pkgdir}"
+}
+
+package_tek-injector-dist() {
+  pkgdesc+=" (release binaries)"
+  depends=()
+
+  mkdir -p "${pkgdir}/var/dist/tek-injector/${pkgver}"
+  cd "${pkgdir}/var/dist/tek-injector/${pkgver}"
+  cp "${srcdir}/build-${MSYSTEM}-dist/libtek-injector.a" ./
+  cp "${srcdir}/build-${MSYSTEM}-dist/libtek-injector.dll.a" ./
+  cp "${srcdir}/build-${MSYSTEM}-dist/libtek-injector.dll" ./
+  "${MINGW_PREFIX}/bin/strip" --strip-unneeded "libtek-injector.dll"
+  cp "${srcdir}/build-${MSYSTEM}-dist/libtek-injector.pdb" ./
+  cp "${srcdir}/build-${MSYSTEM}-dist/tek-injector.exe" ./
+  "${MINGW_PREFIX}/bin/strip" --strip-unneeded tek-injector.exe
+  cp "${srcdir}/build-${MSYSTEM}-dist/tek-injector.pdb" ./
+}
+
+# template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
+# vim: set ft=bash :
+
+# generate wrappers
+for _name in "${pkgname[@]}"; do
+  _short="package_${_name#${MINGW_PACKAGE_PREFIX}-}"
+  _func="$(declare -f "${_short}")"
+  eval "${_func/#${_short}/package_${_name}}"
+done
+# template end;
