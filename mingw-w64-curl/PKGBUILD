@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Command line tool and library for transferring data with URLs (mingw-w64)"
 pkgver=8.19.0
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://curl.se/"
@@ -85,6 +85,7 @@ build() {
     -DENABLE_CURL_MANUAL=OFF \
     -DENABLE_UNICODE=ON \
     -DHTTP_ONLY=ON \
+    -DUSE_ECH=ON \
     -DUSE_NGTCP2=ON \
     -S "${srcdir}/${_realname}-${pkgver}" \
     -B "${srcdir}/build-${MSYSTEM}"

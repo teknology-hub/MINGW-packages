@@ -11,7 +11,7 @@ pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A high-level scripting language (mingw-w64)"
 _pybasever=3.14
 pkgver="${_pybasever}.4"
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.python.org/"
@@ -372,6 +372,7 @@ prepare() {
 
 build() {
   mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+  CFLAGS+=" -DOPENSSL_NO_SSL3 -DOPENSSL_NO_TLS1 -DOPENSSL_NO_TLS1_1 -DOPENSSL_NO_TLS1_2" \
   "${srcdir}/Python-${pkgver}/configure" \
     --prefix="${MINGW_PREFIX}" \
     --enable-loadable-sqlite-extensions \

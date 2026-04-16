@@ -19,43 +19,28 @@
  
  #if defined(_WIN32) && defined(OSSL_WINCTX)
  
-@@ -141,6 +142,41 @@
+@@ -141,6 +142,26 @@
  
      return 1;
  }
 +#elif defined(__MINGW32__) && defined(OPENSSLBIN)
-+/**
-+ * @brief The directory where OpenSSL is installed.
-+ */
-+static char *openssldir = NULL;
++static char openssldirbuf[MAX_PATH];
 +
-+/**
-+ * @brief The directory where OpenSSL engines are located.
-+ */
-+static char *enginesdir = NULL;
-+
-+/**
-+ * @brief The directory where OpenSSL modules are located.
-+ */
-+static char *modulesdir = NULL;
-+
-+static void do_defaults_cleanup_msys2(void) {
-+    free(openssldir);
-+    free(enginesdir);
-+    free(modulesdir);
-+}
++static char modulesdirbuf[MAX_PATH];
 +
 +static CRYPTO_ONCE defaults_setup_msys2_init = CRYPTO_ONCE_STATIC_INIT;
 +
 +/**
-+ * @brief Function to relocate openssldir/modulesdir/enginesdir
++ * @brief Function to relocate openssldir/modulesdir
 + */
 +DEFINE_RUN_ONCE_STATIC(do_defaults_setup_msys2)
 +{
-+    openssldir = single_path_relocation_lib(OPENSSLBIN, OPENSSLDIR);
-+    enginesdir = single_path_relocation_lib(OPENSSLBIN, ENGINESDIR);
-+    modulesdir = single_path_relocation_lib(OPENSSLBIN, MODULESDIR);
-+    OPENSSL_atexit(do_defaults_cleanup_msys2);
++    char *openssldir = single_path_relocation_lib(OPENSSLBIN, OPENSSLDIR);
++    char *modulesdir = single_path_relocation_lib(OPENSSLBIN, MODULESDIR);
++    strcpy(openssldirbuf, openssldir);
++    strcpy(modulesdirbuf, modulesdir);
++    free(openssldir);
++    free(modulesdir);
 +    return 1;
 +}
  #endif /* defined(_WIN32) && defined(OSSL_WINCTX) */
@@ -68,20 +53,9 @@
 +#elif defined(__MINGW32__) && defined(OPENSSLBIN)
 +    if (!RUN_ONCE(&defaults_setup_msys2_init, do_defaults_setup_msys2))
 +        return NULL;
-+    return (const char *)openssldir;
++    return (const char *)openssldirbuf;
  #else
      return OPENSSLDIR;
- #endif
-@@ -170,6 +210,10 @@
-     if (!RUN_ONCE(&defaults_setup_init, do_defaults_setup))
-         return NULL;
-     return (const char *)enginesdirptr;
-+#elif defined(__MINGW32__) && defined(OPENSSLBIN)
-+    if (!RUN_ONCE(&defaults_setup_msys2_init, do_defaults_setup_msys2))
-+        return NULL;
-+    return (const char *)enginesdir;
- #else
-     return ENGINESDIR;
  #endif
 @@ -186,6 +230,10 @@
      if (!RUN_ONCE(&defaults_setup_init, do_defaults_setup))
@@ -90,7 +64,7 @@
 +#elif defined(__MINGW32__) && defined(OPENSSLBIN)
 +    if (!RUN_ONCE(&defaults_setup_msys2_init, do_defaults_setup_msys2))
 +        return NULL;
-+    return (const char *)modulesdir;
++    return (const char *)modulesdirbuf;
  #else
      return MODULESDIR;
  #endif
