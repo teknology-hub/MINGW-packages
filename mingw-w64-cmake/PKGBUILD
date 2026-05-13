@@ -6,7 +6,7 @@ _realname="cmake"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A cross-platform open-source make system (mingw-w64)"
-pkgver=4.3.1
+pkgver=4.3.2
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -41,7 +41,7 @@ source=(
   "0005-Default-to-ninja-generator.patch"
 )
 sha256sums=(
-  "0798f4be7a1a406a419ac32db90c2956936fecbf50db3057d7af47d69a2d7edb"
+  "b0231eb39b3c3cabdc568c619df78208a7bd95ea10c9b2236d61218bac1b367d"
   "25793edcbac05bb6d17fa9947b52ace4a6b5ccccf7758e22ae9ae022ed089061"
   "550a0a75f9996fe389505c4ab7c16077172beb1b706f8dd3e33fc5236e1a7cdb"
   "426818278090704d2a12f62ef3dfd94c47b11fa2784bb842989b7f6a09ee7aa2"

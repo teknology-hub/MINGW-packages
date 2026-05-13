@@ -7,8 +7,8 @@ _realname="sqlite3"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
-_amalgamationver=3530000
-pkgver=3.53.0
+_amalgamationver=3530100
+pkgver=3.53.1
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -30,7 +30,7 @@ source=(
   "0004-dont-misuse-tcl-extern.patch"
 )
 sha256sums=(
-  "fbc30cdbfcfa42c78fe7bddd3fd37ab8995369a31d39097a5d0633296c0b6e65"
+  "1b2b5755d9064c4d5d1b0bf5307b48b089963e291c40cc7351318aa1b61c460e"
   "c0614f28fa1da19fc934d81aff12e5511275b18e07ff27d8d8cfbad88d1b7571"
   "8dd2377afaad17fa85049be90bfc2bd757350343b3f64ff9bfbbcf3736593a34"
 )

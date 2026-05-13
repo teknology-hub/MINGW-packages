@@ -28,7 +28,7 @@ sha256sums=(
   "SKIP"
   "fa95cc8f65e4e7ed2d60fdfea3ea471db33e143ff51475c4ab870ead5ba66baf"
 )
-validpgpkeys=('9001B85AF9E1B83DF1BDA942F5BE8B267C6A406D') # Bruno Haible (Open Source Development) <bruno@clisp.org>
+validpgpkeys=('E0FFBD975397F77A32AB76ECB6301D9E1BBEAC08') # Bruno Haible (Free Software Development) <bruno@clisp.org>
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"

@@ -1,0 +1,17 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -202,13 +202,7 @@
+ 
+     if(ZLIB-NG_FOUND AND NOT MZ_FORCE_FETCH_LIBS)
+         message(STATUS "Using ZLIB-NG")
+-
+-        if(BUILD_SHARED_LIBS)
+-            list(APPEND MINIZIP_LIB_PUBLIC zlib-ng::zlib)
+-        else()
+-            list(APPEND MINIZIP_LIB_PUBLIC zlib-ng::zlibstatic)
+-        endif()
+-
++        list(APPEND MINIZIP_LIB_PUBLIC zlib-ng::zlib)
+         set(PC_PRIVATE_DEPS "zlib-ng")
+         set(ZLIB_COMPAT OFF)
+     elseif(ZLIB_FOUND AND NOT MZ_FORCE_FETCH_LIBS)

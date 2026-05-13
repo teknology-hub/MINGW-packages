@@ -6,7 +6,7 @@ _realname="expat"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="An XML parser library (mingw-w64)"
-pkgver=2.7.5
+pkgver=2.8.1
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -23,7 +23,7 @@ makedepends=(
 )
 source=("https://github.com/libexpat/libexpat/releases/download/R_${pkgver//./_}/${_realname}-${pkgver}.tar.xz"{,.asc})
 sha256sums=(
-  "1032dfef4ff17f70464827daa28369b20f6584d108bc36f17ab1676e1edd2f91"
+  "10b195ee78160a908388180a8fe3603d4e9a12f4755fbf5f3816b23a9d750da0"
   "SKIP"
 )
 validpgpkeys=("3176EF7DB2367F1FCA4F306B1F9B0E909AF37285") # Sebastian Pipping

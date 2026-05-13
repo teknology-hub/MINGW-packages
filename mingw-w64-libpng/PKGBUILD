@@ -5,7 +5,7 @@ _realname="libpng"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A collection of routines used to create PNG format graphics (mingw-w64)"
-pkgver=1.6.57
+pkgver=1.6.58
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -27,7 +27,7 @@ source=(
   "apng.patch"
 )
 sha256sums=(
-  "d10c20d7171569804cae8dfc13ba6dcd0662c41ed39d43d4d429314aafb10a80"
+  "28eb403f51f0f7405249132cecfe82ea5c0ef97f1b32c5a65828814ae0d34775"
   "0e3aca8a0f85c2bc1225cf04af030fe07b24ed1835ce7fa03227e12dc32206d4"
 )
 validpgpkeys=("8048643BA2C840F4F92A195FF54984BFA16C640F") # Glenn Randers-Pehrson (mozilla) <glennrp+bmo@gmail.com>

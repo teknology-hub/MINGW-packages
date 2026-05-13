@@ -5,8 +5,8 @@ _realname="minizip-ng"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Fork of the popular zip manipulation library found in the zlib distribution. (mingw-w64)"
-pkgver=4.1.0
-pkgrel=2
+pkgver=4.2.1
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/zlib-ng/minizip-ng/"
@@ -21,8 +21,19 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
   "${MINGW_PACKAGE_PREFIX}-cmake"
 )
-source=("https://github.com/zlib-ng/minizip-ng/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=("85417229bb0cd56403e811c316150eea1a3643346d9cec7512ddb7ea291b06f2")
+source=(
+  "https://github.com/zlib-ng/minizip-ng/archive/${pkgver}/${_realname}-${pkgver}.tar.gz"
+  "0001-zlibstatic.patch"
+)
+sha256sums=(
+  "3cc35c2cb925dbe67cc801e3234b31b0f30197812a99377352fa1b551ab3d011"
+  "2b2f93fb1fe6965cb0a1994f93f00422817265fbff9a9aeb5cd6556b0c30f0c8"
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/0001-zlibstatic.patch"
+}
 
 build() {
   local _common_config=(

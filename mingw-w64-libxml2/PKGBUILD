@@ -6,7 +6,7 @@ _realname="libxml2"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="XML parsing library, version 2 (mingw-w64)"
-pkgver=2.15.2
+pkgver=2.15.3
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -27,7 +27,7 @@ source=(
   "0032-cmake-relocation.patch"
 )
 sha256sums=(
-  "c8b9bc81f8b590c33af8cc6c336dbff2f53409973588a351c95f1c621b13d09d"
+  "78262a6e7ac170d6528ebfe2efccdf220191a5af6a6cd61ea4a9a9a5042c7a07"
   "baad28b724738464cebf1a4e3320111b848fd7b14619e5c0134784ef7ad2aa3a"
   "278b4531da3d2aabda080c412c5122b471202dd6df67768b38bb0c31c7a0e508"
   "bcb2565878e524df3e3bcd1631dbcefc205e9b435a2e537c1810996b97c4dd4a"
