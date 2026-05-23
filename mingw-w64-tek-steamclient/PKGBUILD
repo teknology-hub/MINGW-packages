@@ -7,7 +7,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}-dist"
 )
 pkgdesc="An open-source partial Steam client implementation"
-pkgver=2.1.4
+pkgver=2.1.5
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -36,7 +36,7 @@ source=(
   "ValveFileVDF-1.1.1.tar.gz::https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.1.tar.gz"
 )
 sha256sums=(
-  "c1745889fc81aa9dd49c893f882dc18b3bf706cbd8aeb6f2cbce19082d87f4e5"
+  "ed3c6b83a04681353ff50fb4be0cd5b92c453eafd3368469b2eb96eab5613531"
   "SKIP"
   "de16a199c535c3b49f2aa0bd17e3154e02b32fa7b0949053ba6d981f8c32197f"
 )
