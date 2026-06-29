@@ -8,7 +8,7 @@ pkgname=(
 )
 pkgdesc="An open-source partial Steam client implementation"
 pkgver=2.1.5
-pkgrel=1
+pkgrel=2
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/teknology-hub/tek-steamclient"
@@ -52,13 +52,21 @@ build() {
   local _common_config=(
     --prefix="${MINGW_PREFIX}"
     --buildtype=debugoptimized
-    --default-library=both
     -Db_lto=true
     -Db_lto_mode=thin
     -Db_ndebug=true
   )
+  PKG_CONFIG="${MINGW_PREFIX}/bin/pkgconf --static" \
   MSYS2_ARG_CONV_EXCL="--prefix=" \
   "${MINGW_PREFIX}/bin/meson" setup \
+    --default-library=static \
+    -Dprefer_static=true \
+    "${_common_config[@]}" \
+    "${srcdir}/build-${MSYSTEM}-static" \
+    "${srcdir}/${_realname}-${pkgver}"
+  MSYS2_ARG_CONV_EXCL="--prefix=" \
+  "${MINGW_PREFIX}/bin/meson" setup \
+    --default-library=shared \
     "${_common_config[@]}" \
     "${srcdir}/build-${MSYSTEM}" \
     "${srcdir}/${_realname}-${pkgver}"
@@ -68,16 +76,19 @@ build() {
   PKG_CONFIG="${MINGW_PREFIX}/bin/pkgconf --static" \
   MSYS2_ARG_CONV_EXCL="--prefix=" \
   "${MINGW_PREFIX}/bin/meson" setup \
+    --default-library=both \
     --default-both-libraries=static \
     -Dprefer_static=true \
     "${_common_config[@]}" \
     "${srcdir}/build-${MSYSTEM}-dist" \
     "${srcdir}/${_realname}-${pkgver}"
+  "${MINGW_PREFIX}/bin/meson" compile -C "${srcdir}/build-${MSYSTEM}-static"
   "${MINGW_PREFIX}/bin/meson" compile -C "${srcdir}/build-${MSYSTEM}"
   "${MINGW_PREFIX}/bin/meson" compile -C "${srcdir}/build-${MSYSTEM}-dist"
 }
 
 package_tek-steamclient() {
+  "${MINGW_PREFIX}/bin/meson" install -C "${srcdir}/build-${MSYSTEM}-static" --destdir "${pkgdir}"
   "${MINGW_PREFIX}/bin/meson" install -C "${srcdir}/build-${MSYSTEM}" --destdir "${pkgdir}"
 }
 
