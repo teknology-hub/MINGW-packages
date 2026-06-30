@@ -5,8 +5,8 @@ _realname="abseil-cpp"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Abseil Common Libraries (C++) from Google (mingw-w64)"
-pkgver=20260107.1
-pkgrel=2
+pkgver=20260526.0
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://abseil.io"
@@ -26,7 +26,7 @@ source=(
   "0003-fix-linking-abseil_dll.patch"
 )
 sha256sums=(
-  "4314e2a7cbac89cac25a2f2322870f343d81579756ceff7f431803c2c9090195"
+  "6e1aee535473414164bf83e4ebc40240dec71a4701f8a642d906e95bea1aea0c"
   "67ee0328f1aa8e3ad24231b2e6ef6a78963218e087cc6a7230e2d4e61b27a741"
 )
 

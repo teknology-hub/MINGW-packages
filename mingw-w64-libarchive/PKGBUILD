@@ -5,8 +5,8 @@ _realname="libarchive"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Multi-format archive and compression library (mingw-w64)"
-pkgver=3.8.7
-pkgrel=2
+pkgver=3.8.8
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.libarchive.org/"
@@ -39,7 +39,7 @@ source=(
   "001-fix-static-library-output-name-on-mingw.patch"
 )
 sha256sums=(
-  "d3a8ba457ae25c27c84fd2830a2efdcc5b1d40bf585d4eb0d35f47e99e5d4774"
+  "3873a88801da067d0528a989af06877710529d50ee8fe6f3970cbb4302efb918"
   "4331c43882b4dad45f6036ee5e81671e0b54bdacbea48a64597282fd3d1bfb85"
 )
 

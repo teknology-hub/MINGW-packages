@@ -7,7 +7,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}"
   "${MINGW_PACKAGE_PREFIX}-libunwind"
 )
-pkgver=22.1.5
+pkgver=22.1.7
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -23,7 +23,7 @@ makedepends=(
 )
 source=("https://github.com/llvm/llvm-project/releases/download/llvmorg-${pkgver}/llvm-project-${pkgver}.src.tar.xz"{,.sig})
 sha256sums=(
-  "7972b87b705a003ce70ab55f9f0fb495d156887cba0eb296d284731139118e2c"
+  "5cc4a3f12bba50b6bdfb4b61bdc852117a0ff2517807c3902fc13267fb93562e"
   "SKIP"
 )
 validpgpkeys=(

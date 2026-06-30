@@ -7,9 +7,9 @@ _realname="winpthreads"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="MinGW-w64 winpthreads library (mingw-w64)"
-pkgver=14.0.0.r37.g2bfe61fba
+pkgver=14.0.0.r147.g31bd54ab7
 pkgrel=1
-_commit="2bfe61fba10c4340ddc335570c3c9d5fb8e5f4d3"
+_commit="31bd54ab7d5fe03c67ed2bb1a57e531b9c7f8cc4"
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.mingw-w64.org/"
@@ -30,7 +30,7 @@ source=(
   "0001-Define-__-de-register_frame_info-in-fake-libgcc_s.patch"
 )
 sha256sums=(
-  "c3f7713b9d032361ff50d802f5dd2ff8b3c581fe093dc1bbe99beef30e065919"
+  "5075e9003a95eced9236b3bff4187df676842fcc03d3087b8378d99233c0893d"
   "2e779bcc60a1422b23e0cfdb5c0f6851f2382592bb4675d08a6bdef78d5e5c10"
 )
 

@@ -12,7 +12,7 @@ It's forked from [MSYS2's repository](https://github.com/msys2/MINGW-packages) w
 
 There is no intention to keep this repository in sync with upstream, it will be updated once in a while
 
-This repository also includes packages for TEK software,:
+This repository also includes packages for TEK software:
 - [mingw-w64-tek-injector](https://github.com/teknology-hub/tek-injector), with a `-dist` split package that provides official statically linked release binaries
 - [mingw-w64-tek-game-runtime-dist](https://github.com/teknology-hub/tek-game-runtime) that provides official release binary
 - [mingw-w64-tek-steamclient](https://github.com/teknology-hub/tek-steamclient), with a `-dist` split package that provides official statically linked release binaries

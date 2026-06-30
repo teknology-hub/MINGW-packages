@@ -6,7 +6,7 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="pkg-config compatible utility which does not depend on glib"
 pkgver=2.5.1
-pkgrel=2
+pkgrel=3
 epoch=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -23,11 +23,19 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-meson"
 )
 provides=("${MINGW_PACKAGE_PREFIX}-pkg-config")
-source=("https://github.com/pkgconf/pkgconf/archive/pkgconf-${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=("79721badcad1987dead9c3609eb4877ab9b58821c06bdacb824f2c8897c11f2a")
+source=(
+  "https://github.com/pkgconf/pkgconf/archive/pkgconf-${pkgver}/${_realname}-${pkgver}.tar.gz"
+  "pkgconf-issue-535-minimal-backport.patch"
+)
+sha256sums=(
+  "79721badcad1987dead9c3609eb4877ab9b58821c06bdacb824f2c8897c11f2a"
+  "77d01b1ed6a1d7d16a6ac45567fb8534ac27657766acad138c259d72c84b6b22"
+)
 
 prepare() {
-  mv "${_realname}-${_realname}-${pkgver}" "${_realname}-${pkgver}"
+  mv "${srcdir}/${_realname}-${_realname}-${pkgver}" "${srcdir}/${_realname}-${pkgver}"
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/pkgconf-issue-535-minimal-backport.patch"
 }
 
 build() {

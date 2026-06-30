@@ -6,8 +6,8 @@ _realname="libffi"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A portable, high level programming interface to various calling conventions (mingw-w64)"
-pkgver=3.5.2
-pkgrel=2
+pkgver=3.6.0
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://sourceware.org/libffi"
@@ -19,7 +19,7 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-libtool"
 )
 source=("https://github.com/libffi/libffi/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=("f3a3082a23b37c293a4fcd1053147b371f2ff91fa7ea1b2a52e335676bac82dc")
+sha256sums=("31ff1fe32deaebfbb388727f32677bb254bf2a41382c51464c0b1837c9ee9828")
 
 build() {
   mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"

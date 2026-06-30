@@ -5,7 +5,7 @@ _realname="ngtcp2"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="An effort to implement IETF QUIC protocol (mingw-w64)"
-pkgver=1.22.1
+pkgver=1.24.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -23,7 +23,7 @@ source=(
   "002-ngtcp2-pkgconfig-add-cflags-private.patch"
 )
 sha256sums=(
-  "dfd2c68bd64b89847c611425b9487105c46e8447b5c21e6aeb00642c8fbe2ca8"
+  "7fa5ec2be0f0cbed8bc4ec89c0787dfa9d8ce678f1ed9477c52f30eb1a591207"
   "SKIP"
   "cdbb6fad1afc1eac3f3bca72cd83e49684439c02b0b74fd8841b9d1523ab86de"
   "6f2e16f047e09b7dece4e3f5a04638756d6aab03856d7838467c6c5ec22b42cd"
