@@ -5,8 +5,8 @@ _realname="nasm"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="An 80x86 assembler designed for portability and modularity (mingw-w64)"
-pkgver=3.01
-pkgrel=2
+pkgver=3.02
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://www.nasm.us"
@@ -19,10 +19,9 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
 )
 source=("https://www.nasm.us/pub/nasm/releasebuilds/${pkgver}/${_realname}-${pkgver}.tar.xz")
-sha256sums=("b7324cbe86e767b65f26f467ed8b12ad80e124e3ccb89076855c98e43a9eddd4")
+sha256sums=("87336eba53b4acfe917424ab5d500d2b0054d9f5148d35c2273ccf2cfb712f0d")
 
 build() {
-  [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
   cp -r "${srcdir}/${_realname}-${pkgver}" "${srcdir}/build-${MSYSTEM}"
   cd "${srcdir}/build-${MSYSTEM}"
   ./configure --prefix="${MINGW_PREFIX}"

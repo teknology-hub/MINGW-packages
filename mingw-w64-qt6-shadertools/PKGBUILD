@@ -5,7 +5,7 @@ _realname="qt6-shadertools"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="APIs and tools in this module provide the producer functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenGL. (mingw-w64)"
-pkgver=6.11.1
+pkgver=6.12.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -23,13 +23,13 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cmake"
 )
 _pkgfn="${_realname/6-/}-everywhere-src-${pkgver}"
-# download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use Yandex mirror instead
+# download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use dotsrc mirror instead
 source=(
-  "https://mirror.yandex.ru/mirrors/qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfn}.tar.xz"
+  "https://mirrors.dotsrc.org/qtproject/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfn}.tar.xz"
   "Qt6ShaderTools.pc.in"
 )
 sha256sums=(
-  "2075052f9b23bcf9de045bbd180037084942f82cce870aab14a1454902c982fc"
+  "c7d84f436e1aaef39fdcadebf2bd71bdf24dc69497e13f2e0198873cbbfea2ab"
   "6e797cc0a2cd58a49733fd1f34f6ddc11f97ac00e469f6376f1c4594b9b23be6"
 )
 

@@ -5,7 +5,7 @@ _realname="libpng"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A collection of routines used to create PNG format graphics (mingw-w64)"
-pkgver=1.6.58
+pkgver=1.6.59
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -23,11 +23,11 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cmake"
 )
 source=(
-  "https://downloads.sourceforge.net/sourceforge/libpng/${_realname}-${pkgver}.tar.xz"
+  "https://github.com/pnggroup/libpng/archive/refs/tags/v${pkgver}.tar.gz"
   "apng.patch"
 )
 sha256sums=(
-  "28eb403f51f0f7405249132cecfe82ea5c0ef97f1b32c5a65828814ae0d34775"
+  "2540302a1844ad2b2b501977abecfa850f265f97b78f065a712ab4074a89f5b5"
   "0e3aca8a0f85c2bc1225cf04af030fe07b24ed1835ce7fa03227e12dc32206d4"
 )
 validpgpkeys=("8048643BA2C840F4F92A195FF54984BFA16C640F") # Glenn Randers-Pehrson (mozilla) <glennrp+bmo@gmail.com>
@@ -53,7 +53,6 @@ build() {
 package () {
   DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
   cp "${pkgdir}${MINGW_PREFIX}/bin/libpng16.dll" "${pkgdir}${MINGW_PREFIX}/bin/libpng.dll"
-  mv "${pkgdir}${MINGW_PREFIX}/lib/libpng.dll" "${pkgdir}${MINGW_PREFIX}/lib/libpng.dll.a"
   rm -r "${pkgdir}${MINGW_PREFIX}/share"
 }
 

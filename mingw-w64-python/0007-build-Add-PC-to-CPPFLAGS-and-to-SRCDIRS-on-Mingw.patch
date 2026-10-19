@@ -1,4 +1,4 @@
-From 26c25af0f4c08dd3dc466da7407549e25943341b Mon Sep 17 00:00:00 2001
+From aa2755539be474dea577443a28911f59b3dd87fc Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B5=D0=B9?=
  <alexey.pawlow@gmail.com>
 Date: Thu, 17 Jun 2021 18:51:18 +0530
@@ -11,10 +11,10 @@ Co-authored-by: Naveen M K <naveen521kk@gmail.com>
  1 file changed, 15 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index f4e8c1d..df7c2e4 100644
+index b31e11a..470b64e 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -7317,6 +7317,16 @@ do
+@@ -7454,6 +7454,16 @@ do
    THREADHEADERS="$THREADHEADERS \$(srcdir)/$h"
  done
  
@@ -31,7 +31,7 @@ index f4e8c1d..df7c2e4 100644
  AC_SUBST([SRCDIRS])
  SRCDIRS="\
    Modules \
-@@ -7344,6 +7354,11 @@ SRCDIRS="\
+@@ -7481,6 +7491,11 @@ SRCDIRS="\
    Programs \
    Python \
    Python/frozen_modules"

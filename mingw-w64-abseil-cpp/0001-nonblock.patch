@@ -1,0 +1,11 @@
+--- a/absl/time/internal/cctz/src/time_zone_info.cc	2026-10-15 17:07:40.650274600 +0300
++++ b/absl/time/internal/cctz/src/time_zone_info.cc	2026-10-15 17:08:18.016117200 +0300
+@@ -413,7 +413,7 @@
+ #ifndef O_CLOEXEC
+ #define O_CLOEXEC 0
+ #endif
+-  const int fd = open(path, O_RDONLY | O_NONBLOCK | O_CLOEXEC);
++  const int fd = open(path, O_RDONLY | O_CLOEXEC);
+   if (fd >= 0) {
+     struct stat st;
+     if (fstat(fd, &st) == 0 && S_ISREG(st.st_mode)) {

@@ -6,7 +6,7 @@ _realname="libjpeg-turbo"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="JPEG image codec with accelerated baseline compression and decompression (mingw-w64)"
-pkgver=3.1.4.1
+pkgver=3.2.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -28,7 +28,7 @@ source=(
   "0001-header-compat.mingw.patch"
 )
 sha256sums=(
-  "ecae8008e2cc9ade2f2c1bb9d5e6d4fb73e7c433866a056bd82980741571a022"
+  "6f30092cef9fb839779646608f4ee14ae3cbac989c47fa05e841b0841f09878e"
   "SKIP"
   "f0609ad801831a549cbc15eeee5ab45fb9df344e607491f6f1ad762519d50089"
 )

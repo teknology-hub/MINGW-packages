@@ -5,13 +5,16 @@ _realname="meson"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="High-productivity build system (mingw-w64)"
-pkgver=1.11.1
+pkgver=1.12.1
 pkgrel=1
 arch=("any")
 mingw_arch=("tek-x86_64")
 url="https://mesonbuild.com/"
 msys2_references=(
+  "anitya: 6472"
   "archlinux: meson"
+  "aur:"
+  "gentoo: dev-build/meson"
   "purl: pkg:pypi/meson"
 )
 msys2_repository_url="https://github.com/mesonbuild/meson"
@@ -35,7 +38,7 @@ source=(
   "0005-declare-dep-assert.patch"
 )
 sha256sums=(
-  "6788ae299979643f8d841bcaf64352558436cae45a0355148a3aeeccf7913866"
+  "ab0a6ca09f8ef70c564c8241fb5a23957886a0b53fb58412b5e07eaf07dba743"
   "5805aed0a117536eb16dd8eef978c6be57c2471b655ede63e25517c28b4f4cf0"
   "032b38f0b2765dc88e1fcb34e27b69b611e07c869c13c6e703bcf182e586fccb"
   "bc43a2695498885afa08f2aeb927d6958741aa1a9fc66850de1a6c79fdf59241"

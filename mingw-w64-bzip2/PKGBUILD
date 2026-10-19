@@ -7,14 +7,13 @@ pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A high-quality data compression program (mingw-w64)"
 pkgver=1.0.8
-pkgrel=4
+pkgrel=5
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://sourceware.org/bzip2/"
 msys2_references=("cpe: cpe:/a:bzip:bzip2")
 msys2_repository_url="https://sourceware.org/git/?p=bzip2.git"
 license=("custom")
-depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 makedepends=(
   "autotools"
   "${MINGW_PACKAGE_PREFIX}-cc"

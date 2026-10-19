@@ -1,4 +1,4 @@
-From caff31fc79b2c9a5bbbd194db481af0025ae215e Mon Sep 17 00:00:00 2001
+From eb8243f2ba9f7acf0ec7dd78c9253bc5ae0dc01f Mon Sep 17 00:00:00 2001
 From: Christoph Reiter <reiter.christoph@gmail.com>
 Date: Mon, 5 Jan 2026 19:34:32 +0100
 Subject: [PATCH 029/N] python-config: use the Python variant of
@@ -10,10 +10,10 @@ so there is no bash required to run it on Windows
  1 file changed, 4 insertions(+)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 24f8762..d9d2f99 100644
+index b876914..b0cb692 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -2851,6 +2851,10 @@ python-config: $(srcdir)/Misc/python-config.in Misc/python-config.sh
+@@ -2858,6 +2858,10 @@ python-config: $(srcdir)/Misc/python-config.in Misc/python-config.sh
  	@if test `uname -s` = Darwin; then \
  		cp python-config.py python-config; \
  	fi

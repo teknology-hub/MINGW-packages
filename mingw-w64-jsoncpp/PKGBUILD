@@ -5,7 +5,7 @@ _realname="jsoncpp"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A C++ library for interacting with JSON (mingw-w64)"
-pkgver=1.9.7
+pkgver=1.9.8
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -19,7 +19,7 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cmake"
 )
 source=("https://github.com/open-source-parsers/jsoncpp/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=("830bf352d822d8558e9d0eb19d640d2e38536b4b6699c30a4488da09d5b1df18")
+sha256sums=("51828cf3574281d2b79ec2a1c56a9e4c20cc1103711321ea96384cffb8d2d904")
 
 build() {
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \

@@ -5,7 +5,7 @@ _realname="libarchive"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Multi-format archive and compression library (mingw-w64)"
-pkgver=3.8.8
+pkgver=3.8.10
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -39,7 +39,7 @@ source=(
   "001-fix-static-library-output-name-on-mingw.patch"
 )
 sha256sums=(
-  "3873a88801da067d0528a989af06877710529d50ee8fe6f3970cbb4302efb918"
+  "56cad765459d5ee25a3b761f90c47d99379d28297fbfb72d908880d6b875fb96"
   "4331c43882b4dad45f6036ee5e81671e0b54bdacbea48a64597282fd3d1bfb85"
 )
 
@@ -70,4 +70,6 @@ package() {
   DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake" --install "${srcdir}/build-${MSYSTEM}"
   rm -r "${pkgdir}${MINGW_PREFIX}/share"
   sed -i -e "s|$(cygpath -wm ${MINGW_PREFIX})|${MINGW_PREFIX}|g" "${pkgdir}${MINGW_PREFIX}/lib/pkgconfig/libarchive.pc"
+  cd "${pkgdir}${MINGW_PREFIX}/bin/"
+  ln "bsdunzip.exe" "unzip.exe"
 }

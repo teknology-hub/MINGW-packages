@@ -1,7 +1,7 @@
-From 582b0a8834393c2265de6454f536cb149b7f6e62 Mon Sep 17 00:00:00 2001
+From 749a5534191a18136cb1ffe39e863ba2ecdaea43 Mon Sep 17 00:00:00 2001
 From: Christoph Reiter <reiter.christoph@gmail.com>
 Date: Sat, 3 Jan 2026 10:47:49 +0100
-Subject: [PATCH 098/N] pycore_time: fix missing timeval
+Subject: [PATCH 096/N] pycore_time: fix missing timeval
 
 https://github.com/python/cpython/issues/82863
 ---

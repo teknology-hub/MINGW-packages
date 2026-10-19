@@ -5,7 +5,7 @@ _realname="packaging"
 pkgbase="mingw-w64-python-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-python-${_realname}"
 pkgdesc="Core utilities for Python packages (mingw-w64)"
-pkgver=26.2
+pkgver=26.3
 pkgrel=1
 arch=("any")
 mingw_arch=("tek-x86_64")
@@ -18,16 +18,17 @@ license=(
 )
 depends=("${MINGW_PACKAGE_PREFIX}-python")
 makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-python-build"
   "${MINGW_PACKAGE_PREFIX}-python-flit-core"
   "${MINGW_PACKAGE_PREFIX}-python-installer"
 )
 source=("https://pypi.io/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=("ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661")
+sha256sums=("94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79")
 
 build() {
   cp -r "${srcdir}/${_realname}-${pkgver}" "${srcdir}/build-${MSYSTEM}"
   cd "${srcdir}/build-${MSYSTEM}"
-  "${MINGW_PREFIX}/bin/python" -m flit_core.wheel
+  "${MINGW_PREFIX}/bin/python" -m build --wheel --skip-dependency-check --no-isolation
 }
 
 package() {

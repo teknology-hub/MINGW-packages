@@ -5,8 +5,8 @@ _realname="minizip-ng"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Fork of the popular zip manipulation library found in the zlib distribution. (mingw-w64)"
-pkgver=4.2.1
-pkgrel=2
+pkgver=4.2.2
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/zlib-ng/minizip-ng/"
@@ -26,7 +26,7 @@ source=(
   "0001-zlibstatic.patch"
 )
 sha256sums=(
-  "3cc35c2cb925dbe67cc801e3234b31b0f30197812a99377352fa1b551ab3d011"
+  "71af7b9799856d8b03619df3949e9c1be9703f8de0795af71399ba283cb27aac"
   "2b2f93fb1fe6965cb0a1994f93f00422817265fbff9a9aeb5cd6556b0c30f0c8"
 )
 

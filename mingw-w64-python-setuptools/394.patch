@@ -1,4 +1,4 @@
-From 47a67447af7a81717ec8a6e768b13158ff9f979c Mon Sep 17 00:00:00 2001
+From b263b1771d81a2d4ef43ee0e2e11461815f78957 Mon Sep 17 00:00:00 2001
 From: Christoph Reiter <reiter.christoph@gmail.com>
 Date: Sun, 11 Jan 2026 18:13:43 +0100
 Subject: [PATCH] install: correct sysconfig scheme lookup on Windows
@@ -18,22 +18,24 @@ for distutils since that only means "headers" are missing, which distutils
 injects later, resulting in the same scheme paths.
 
 For MINGW Python which defaults to the "posix" scheme this fixes the default
-install location (up until now we patched the "nt" scheme to work around this
-but we want to fix the real issue now)
+install location (up until now MINGW Python patched the "nt" scheme to work
+around this but we want to fix the real issue now)
 ---
  distutils/command/install.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/distutils/command/install.py b/distutils/command/install.py
-index 8421d54e..6d8169e4 100644
---- a/distutils/command/install.py
-+++ b/distutils/command/install.py
-@@ -142,7 +142,7 @@ def _remove_set(ob, attrs):
+index 8421d54e0..6d8169e45 100644
+--- a/_distutils/command/install.py
++++ b/_distutils/command/install.py
+@@ -141,10 +141,10 @@
+ 
+ 
  def _resolve_scheme(name):
-     os_name, sep, key = name.partition('_')
+     _os_name, _sep, key = name.partition('_')
      try:
 -        resolved = sysconfig.get_preferred_scheme(key)
 +        resolved = sysconfig.get_preferred_scheme(key or "prefix")
-     except Exception:
+     except Exception:  # noqa: BLE001 # any failure falls back to the framework scheme
          resolved = fw.scheme(name)
      return resolved

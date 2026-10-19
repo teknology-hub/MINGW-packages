@@ -37,3 +37,35 @@ index e5a81f2..3dd3699 100755
  		$(LDFLAGS.libsqlite3.os-specific) $(LDFLAGS.libsqlite3.soname)
  $(libsqlite3.DLL)-1: $(libsqlite3.DLL)
  $(libsqlite3.DLL)-0 $(libsqlite3.DLL)-:
+@@ -1665,8 +1667,8 @@ libtclsqlite3.rpath-     = $(libtclsqlite3.rpath-1)
+ $(libtclsqlite3.DLL): $(T.tcl.env.sh) tclsqlite.o $(LIBOBJ)
+ 	$(T.tcl.env.source); \
+ 	$(T.link.shared) -o $@ tclsqlite.o \
+-		$$TCL_INCLUDE_SPEC $$TCL_STUB_LIB_SPEC $(LDFLAGS.libsqlite3) \
+-		$(LIBOBJ) $(libtclsqlite3.rpath-$(ENABLE_RPATH))
++		$$TCL_INCLUDE_SPEC $$TCL_STUB_LIB_SPEC $(LDFLAGS.libsqlite3) $(LDFLAGS.link) \
++		$(LIBOBJ) -L$$TCLLIBDIR $(libtclsqlite3.rpath-$(ENABLE_RPATH))
+ $(libtclsqlite3.DLL)-1: $(libtclsqlite3.DLL)
+ $(libtclsqlite3.DLL)-0 $(libtclsqlite3.DLL)-:
+ libtcl: $(libtclsqlite3.DLL)-$(HAVE_TCL)
+@@ -1929,8 +1931,9 @@ shelltest:
+ #
+ sqlite3_analyzer.c.flags.0 = -DINCLUDE_SQLITE3_C=1
+ sqlite3_analyzer.c.flags.1 =
+-sqlite3_analyzer.c: sqlite3.c tclsqlite-ex.c $(TOP)/tool/spaceanal.tcl \
+-                    $(TOP)/tool/mkccode.tcl $(TOP)/tool/sqlite3_analyzer.c.in
++sqlite3_analyzer.c: sqlite3.c sqlite3.h tclsqlite-ex.c $(TOP)/tool/spaceanal.tcl \
++                    $(TOP)/tool/mkccode.tcl $(TOP)/tool/sqlite3_analyzer.c.in \
++                    $(TOP)/ext/misc/sqlite3_stdio.c $(TOP)/ext/misc/sqlite3_stdio.h
+ 	$(B.tclsh) $(TOP)/tool/mkccode.tcl $(TOP)/tool/sqlite3_analyzer.c.in \
+ 		$(sqlite3_analyzer.c.flags.$(LINK_TOOLS_DYNAMICALLY)) \
+ 		$(OPT_FEATURE_FLAGS) \
+@@ -2183,7 +2186,7 @@ sqlite3d$(T.exe):	shell.c $(LIBOBJS0)
+ 	$(T.link) -o $@ \
+ 		shell.c $(LIBOBJS0) \
+ 		$(CFLAGS.readline) $(SHELL_OPT) \
+-		$(LDFLAGS.libsqlite3) $(LDFLAGS.readline)
++		$(LDFLAGS.libsqlite3) $(LDFLAGS.readline) $(LDFLAGS.link)
+ 
+ install-shell-0: sqlite3$(T.exe) $(install-dir.bin)
+ 	$(INSTALL) sqlite3$(T.exe) "$(install-dir.bin)"

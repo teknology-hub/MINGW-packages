@@ -9,7 +9,7 @@ pkgname=(
 )
 pkgdesc="zlib replacement with optimizations for next generation systems (mingw-w64)"
 pkgver=2.3.3
-pkgrel=2
+pkgrel=3
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/zlib-ng/zlib-ng"

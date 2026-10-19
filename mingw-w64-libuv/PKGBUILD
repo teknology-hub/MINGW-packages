@@ -6,7 +6,7 @@ _realname="libuv"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="Cross-platform asynchronous I/O (mingw-w64)"
-pkgver=1.52.1
+pkgver=1.53.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -25,7 +25,7 @@ makedepends=(
 )
 source=("https://dist.libuv.org/dist/v${pkgver}/${_realname}-v${pkgver}.tar.gz"{,.sign})
 sha256sums=(
-  "66d511b9e6e334c0e62279eb234fbfb2b3110b1479c09b95b44c7afca8cff9e7"
+  "cb0d6dd2128d5a95bd242c6cc982a24fe608fa93da57b6b4ec763b0018c53e64"
   "SKIP"
 )
 validpgpkeys=(

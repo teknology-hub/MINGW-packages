@@ -1,0 +1,25 @@
+--- a/ncurses/curses.priv.h	2026-10-15 12:09:59.075984000 +0300
++++ b/ncurses/curses.priv.h	2026-10-15 12:10:27.345544300 +0300
+@@ -2291,22 +2291,6 @@
+  */
+ #if USE_WIDEC_SUPPORT
+ 
+-#if defined(_NC_WINDOWS_NATIVE) && !defined(_NC_MSC) && !USE_NAMED_PIPES
+-/*
+- * MinGW has wide-character functions, but they do not work correctly.
+- */
+-extern int __MINGW_NOTHROW _nc_wctomb(char *, wchar_t);
+-#define wctomb(s,wc) _nc_wctomb(s,wc)
+-#define wcrtomb(s,wc,n) _nc_wctomb(s,wc)
+-
+-extern int __MINGW_NOTHROW _nc_mbtowc(wchar_t *, const char *, size_t);
+-#define mbtowc(pwc,s,n) _nc_mbtowc(pwc,s,n)
+-
+-extern int __MINGW_NOTHROW _nc_mblen(const char *, size_t);
+-#define mblen(s,n) _nc_mblen(s, n)
+-
+-#endif /* _NC_WINDOWS_NATIVE && !_NC_MSC */
+-
+ #if HAVE_MBTOWC && HAVE_MBLEN
+ #define reset_mbytes(state) IGNORE_RC(mblen(NULL, (size_t) 0)), IGNORE_RC(mbtowc(NULL, NULL, (size_t) 0))
+ #define count_mbytes(buffer,length,state) mblen(buffer,length)

@@ -5,7 +5,7 @@ _realname="qt6-base"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"
-pkgver=6.11.1
+pkgver=6.12.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -35,13 +35,14 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-pkgconf"
 )
 _pkgfn="${_realname/6-/}-everywhere-src-${pkgver}"
-# download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use Yandex mirror instead
+# download.qt.io blocks traffic from all IP addresses affiliated with Russia in any way, so use dotsrc mirror instead
 source=(
-  "https://mirror.yandex.ru/mirrors/qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfn}.tar.xz"
+  "https://mirrors.dotsrc.org/qtproject/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfn}.tar.xz"
   "003-adjust-qmake-conf-mingw.patch"
   "004-qt-6.2.0-win32-g-Add-QMAKE_EXTENSION_IMPORTLIB-defaulting-to-.patch"
   "006-qt-6.2.0-dont-add-resource-files-to-qmake-libs.patch"
   "009-qfileinfo-undefine-mingw-stat.patch"
+  "010-export-some-constexpr-variables.patch"
   "Qt6Concurrent.pc.in"
   "Qt6Core.pc.in"
   "Qt6Gui.pc.in"
@@ -49,11 +50,12 @@ source=(
   "Qt6Xml.pc.in"
 )
 sha256sums=(
-  "d9594a31228aa23ad6b531719a29b45f0f3989fe6c136d45767ea179f233c1ac"
+  "a951bd163c7b80fc6b8c88d7668fb56abf91c152373e13c10666763238131307"
   "68156b8b7717a0ce19c4b991942469171bfa048cd5c90765115a546e65669a1d"
   "ed5b61bcb367bbda459bec903d796ea45604278f577a988d602ade07ec6bf363"
   "4085a10b290b8e3d930de535cbad2ba3e643432cba433aa2b28fe664f86d38a3"
   "f4261d43a142a24e5fa3b23e25813754839db84078cc8c6dc611139bf531e64a"
+  "2cd0b791209d53ce5a0ff2afc76cb1aedbdc1a92fe406c27bc6e5cd2f4ed0ad4"
   "ebd66cb8cdf9bb311ccc18ed2029bca9f0c8626969ce8ce51b86f22d578ffff0"
   "1a6a3ee5633fd8ca5094bc887d73f2c58a41f3e2ff82288ff00b8d0d81f86ab7"
   "c4f97295a2ab421bd57b88c873217a0f8c3d64e7f67ef9469a6c561ee1856cb9"
@@ -67,6 +69,7 @@ prepare() {
   patch -Np1 -i "${srcdir}/004-qt-6.2.0-win32-g-Add-QMAKE_EXTENSION_IMPORTLIB-defaulting-to-.patch"
   patch -Np1 -i "${srcdir}/006-qt-6.2.0-dont-add-resource-files-to-qmake-libs.patch"
   patch -Np1 -i "${srcdir}/009-qfileinfo-undefine-mingw-stat.patch"
+  patch -Np1 -i "${srcdir}/010-export-some-constexpr-variables.patch"
 }
 
 build() {
@@ -100,7 +103,6 @@ build() {
     -DFEATURE_sql_sqlite=ON \
     -DFEATURE_system_sqlite=ON \
     -DFEATURE_testlib=OFF \
-    -DFEATURE_texthtmlparser=OFF \
     -DFEATURE_textmarkdownreader=OFF \
     -DFEATURE_textmarkdownwriter=OFF \
     -DFEATURE_textodfwriter=OFF \

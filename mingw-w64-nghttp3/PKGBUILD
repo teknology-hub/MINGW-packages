@@ -5,7 +5,7 @@ _realname="nghttp3"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc="HTTP/3 library written in C (mingw-w64)"
-pkgver=1.17.0
+pkgver=1.18.0
 pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
@@ -22,7 +22,7 @@ source=(
   "002-nghttp3-pkgconfig-add-cflags-private.patch"
 )
 sha256sums=(
-  "e8b798272b9282045cb83577dcf7bd7fcd22bb3a43aec0eb1a24f675b4cef0b8"
+  "aad782c23d3f01bd4bb52c8bac7a553b631ef8115fd1612703df6183449fef19"
   "SKIP"
   "08559edf597300d34b258c5dab6d16237c6493976e7b4d45a818e0619d21665d"
   "68c831018eb79bc3b43a8fb6a7d013a617dbe2ba7d7971b0993b3cf27107e614"
