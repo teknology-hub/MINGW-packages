@@ -4,8 +4,8 @@ _realname="tek-game-runtime"
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-dist"
 pkgdesc="Injectable DLL for modifying game functions (release binary)"
-pkgver=1.2.3
-pkgrel=3
+pkgver=1.2.4
+pkgrel=1
 arch=("x86_64")
 mingw_arch=("tek-x86_64")
 url="https://github.com/teknology-hub/tek-game-runtime"
@@ -19,7 +19,7 @@ makedepends=(
 )
 source=("https://teknology-hub.com/software/tek-game-runtime/releases/${pkgver}/src/${_realname}-${pkgver}.tar.zst"{,.sig})
 sha256sums=(
-  "ffc96eab44ac62f25df08f7a84d6371ffac48db3c59eb3a5d807be869f42cac0"
+  "205b2f3aba3c4dfa021ff269b5d2624124a1f21eb09a1a7b9bcccd868d16f0d9"
   "SKIP"
 )
 validpgpkeys=("F021C4E2C06A2D2AE01688EFA5B1020268A1093A") # Nuclearist
